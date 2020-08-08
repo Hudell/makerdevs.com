@@ -1,6 +1,6 @@
 import Platforms from '../models/Platforms';
-import Plugins from '../models/Plugins';
-import { oldPlugins } from '../data/plugins';
+// import Plugins from '../models/Plugins';
+// import { oldPlugins } from '../data/plugins';
 
 Meteor.startup(() => {
   // Create the default platforms 
@@ -9,19 +9,19 @@ Meteor.startup(() => {
 
 
 // Add the old plugins
-  for (const plugin of oldPlugins) {
-    const existingPlugin = Plugins.findOneByImportedId(plugin.id);
-    if (existingPlugin) {
-      continue;
-    }
+  // for (const plugin of oldPlugins) {
+  //   const existingPlugin = Plugins.findOneByImportedId(plugin.id);
+  //   if (existingPlugin) {
+  //     continue;
+  //   }
 
-    Plugins.addPlugin({
-      name: plugin.name,
-      description: plugin.description,
-      importedId: plugin.id,
-      platforms: ['mv'],
-      help: plugin.help,
-      tags: (plugin.tags || '').split(',').map(tag => tag.trim()),
-    });
-  }
+  //   Plugins.addPlugin({
+  //     name: plugin.name,
+  //     description: plugin.description,
+  //     importedId: plugin.id,
+  //     platforms: ['mv'],
+  //     help: plugin.help,
+  //     tags: (plugin.tags || '').split(',').map(tag => tag.trim()),
+  //   });
+  // }
 });

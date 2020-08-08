@@ -1,15 +1,21 @@
 <template name="pluginPage">
-  <div class="col-lg-6">
-    <div class="card card-primary card-outline">
-      <div class="card-header">
-        <h5 class="m-0">{{name}}</h5>
-      </div>
-      <div class="card-body">
-        <p class="card-text">{{description}}</p>
+  {{#if isLoaded}}
+    <div class="col-lg-6">
+      <div class="card card-primary card-outline">
+        <div class="card-header">
+          <h5 class="m-0">{{plugin.name}}</h5>
+        </div>
+        <div class="card-body">
+          <p class="card-text">{{plugin.description}}</p>
 
-        <a href="/plugins/{{_id}}" class="btn btn-primary">Download link</a>
-        <!-- <a href="#" class="btn btn-primary">External link</a> -->
+          <a href="/plugins/{{_id}}" class="btn btn-primary">Download link</a>
+          <!-- <a href="#" class="btn btn-primary">External link</a> -->
+        </div>
       </div>
     </div>
-  </div>
+  {{else}}
+    <div class="overlay">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}
 </template>
