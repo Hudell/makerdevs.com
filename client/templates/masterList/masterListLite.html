@@ -1,0 +1,14 @@
+<template name="masterListLite">
+
+    {{#each symbol in headers}}
+      <h2>{{symbol}}</h2>
+
+      <ul>
+      {{#each plugin in symbolPlugins symbol}}
+        {{> pluginLiteCard plugin=plugin}}
+      {{/each}}
+      </ul>
+
+    {{/each}}
+
+</template>
