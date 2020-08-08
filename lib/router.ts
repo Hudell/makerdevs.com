@@ -3,7 +3,6 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from 'meteor/session';
 
 const useTemplate = (templateName, pageTitle, breadcrumbs = []) => {
-  console.log('use Template');
   Session.set('pageTitle', pageTitle);
   Session.set('breadcrumbs', breadcrumbs);
   return BlazeLayout.render('contentWrapper', {
@@ -80,3 +79,10 @@ FlowRouter.route('/mvplugin/:importedId', {
     useTemplate('pluginPage', 'Plugin');
   }
 });
+
+FlowRouter.notFound = {
+  async action(params, queryParams) {
+    await import('../client/templates/404/404');
+    useTemplate('404', 'Not Found');
+  }
+};

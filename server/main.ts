@@ -9,3 +9,5 @@ import '../models/Reviews';
 import './publications/plugins';
 import './publications/latestPlugins';
 
+import './methods/plugin';
+
