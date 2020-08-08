@@ -11,7 +11,7 @@ const useTemplate = (templateName, pageTitle, breadcrumbs = []) => {
 };
 
 FlowRouter.route('/', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/latestPlugins/latestPlugins');
     Meteor.SubsCache.subscribe('latestPlugins');
 
@@ -19,8 +19,28 @@ FlowRouter.route('/', {
   }
 });
 
+FlowRouter.route('/login', {
+  async action() {
+    if (Meteor.userId()) {
+      FlowRouter.go('/home');
+      return;
+    }
+
+    await import('../client/templates/login/login');
+    useTemplate('login', 'Login');
+  }
+});
+
+FlowRouter.route('/logout', {
+  async action() {
+    Meteor.logout(function() {
+      FlowRouter.go('/home');
+    });
+  }
+});
+
 FlowRouter.route('/home', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/latestPlugins/latestPlugins');
     Meteor.SubsCache.subscribe('latestPlugins');
 
@@ -29,7 +49,7 @@ FlowRouter.route('/home', {
 });
 
 FlowRouter.route('/about', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/about/about');
 
     useTemplate('about', 'About');
@@ -37,7 +57,7 @@ FlowRouter.route('/about', {
 });
 
 FlowRouter.route('/latest', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/latestPlugins/latestPlugins');
     Meteor.SubsCache.subscribe('latestPlugins');
 
@@ -45,8 +65,16 @@ FlowRouter.route('/latest', {
   }
 });
 
+FlowRouter.route('/profile/:username', {
+  async action(params) {
+    await import('../client/templates/profile/profile');
+
+    useTemplate('profile', 'User Profile');
+  }
+});
+
 FlowRouter.route('/mv/master-list', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/masterList/masterListLite');
     Meteor.SubsCache.subscribe('plugins');
     // Meteor.subscribe('plugins');
@@ -57,7 +85,7 @@ FlowRouter.route('/mv/master-list', {
 });
 
 FlowRouter.route('/mz/master-list', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/masterList/masterListLite');
     Meteor.SubsCache.subscribe('plugins');
 
@@ -67,21 +95,21 @@ FlowRouter.route('/mz/master-list', {
 });
 
 FlowRouter.route('/plugin/:pluginId', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/plugin/pluginPage');
     useTemplate('pluginPage', 'Plugin');
   }
 });
 
 FlowRouter.route('/mvplugin/:importedId', {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/plugin/pluginPage');
     useTemplate('pluginPage', 'Plugin');
   }
 });
 
 FlowRouter.notFound = {
-  async action(params, queryParams) {
+  async action() {
     await import('../client/templates/404/404');
     useTemplate('404', 'Not Found');
   }
