@@ -8,13 +8,69 @@ import toastr from 'toastr';
 import Plugins from '../../../models/Plugins';
 import './pluginPage.html';
 
+const getPlugin = () => {
+  return Template.instance().plugin.get();
+};
+
+const getLatestFiles = () => {
+  //Return the most recent file of each platform
+  const plugin = getPlugin();
+
+  const platforms = {};
+  for (const version of plugin.versions) {
+    for (const platform of version.platforms) {
+      if (!platforms[platform] || platforms[platform]._createdAt < version._createdAt) {
+        platforms[platform] = version;
+      }
+    }
+  }
+
+  const files = [];
+  for (const platform in platforms) {
+    const file = platforms[platform];
+    if (!files.includes(file)) {
+      files.push(file);
+    }
+  }
+
+  // If the number of files is not even, then tell the last file to use a largeColumn
+  if (files.length && files.length % 2 === 1) {
+    files[files.length -1].largeColumn = true;
+  }
+
+  return files;
+};
 
 Template.pluginPage.helpers({
   plugin() {
-    return Template.instance().plugin.get();
+    return getPlugin();
   },
   isLoaded() {
     return Template.instance().isLoaded.get();
+  },
+  latestFiles() {
+    return getLatestFiles();
+  },
+  platformName(code) {
+    const plugin = getPlugin();
+
+    for (const platform of plugin.platforms) {
+      if (platform._id == code) {
+        return platform.name;
+      }
+    }
+
+    return code.toUpperCase();
+  },
+  reviews() {
+    const plugin = getPlugin();
+
+    const allReviews = [];
+    for (const version of plugin.versions) {
+      allReviews.push(...version.reviews);
+    }
+
+    return allReviews.sort((item1, item2) => item2._createdAt - item1._createdAt);
   }
 });
 
@@ -32,6 +88,8 @@ Template.pluginPage.onCreated(function() {
       console.log(err);
       return;
     }
+
+    console.log(data);
 
     Session.set('pageTitle', `Plugin Details - ${ data.name }`);
     this.plugin.set(data);

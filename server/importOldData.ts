@@ -1,6 +1,9 @@
 import Plugins from '../models/Plugins';
 import Users from '../models/Users';
 
+import { Plugin, PluginVersion, PluginReview } from '../lib/types/Plugin';
+import { User } from '../lib/types/User';
+
 import { oldPlugins } from '../data/plugins';
 import { oldPluginVersions } from '../data/pluginVersions';
 import { oldPluginComments } from '../data/pluginComments';
@@ -8,10 +11,10 @@ import { oldUsers } from '../data/users';
 
 Meteor.startup(() => {
   // Add the old plugins
-  const userIds = {};
+  const userIds: Record<string, string> = {};
 
   for (const user of oldUsers) {
-    const userData = {
+    const userData: User = {
       name: user.name,
       emails: [{
         address: user.email,
@@ -25,7 +28,7 @@ Meteor.startup(() => {
       },
       website: user.website,
       views: 0,
-      about: user.about,
+      about: user.about || undefined,
       importedId: user.id,
       _createdAt: new Date(`${ user.created_at }Z`),
       _updatedAt: new Date(`${ user.updated_at }Z`),
@@ -36,7 +39,7 @@ Meteor.startup(() => {
     } catch(e) {
     }
 
-    const id = Users.insert(userData);
+    const id = Users.addUser(userData);
     userIds[user.id] = id;
   }
 
@@ -46,11 +49,11 @@ Meteor.startup(() => {
       continue;
     }
 
-    const pluginData = {
+    const pluginData: Plugin = {
       name: plugin.name,
       description: plugin.description,
       importedId: plugin.id,
-      help: plugin.help,
+      help: plugin.help || '',
       tags: (plugin.tags || '').split(',').map(tag => tag.trim()),
       versions: [],
       reactions: {
@@ -65,7 +68,7 @@ Meteor.startup(() => {
         continue;
       }
 
-      const versionData = {
+      const versionData: PluginVersion = {
         name: version.name,
         importedId: version.id,
         downloadLink: version.download_link,
@@ -82,7 +85,7 @@ Meteor.startup(() => {
           continue;
         }
 
-        const commentData = {
+        const commentData: PluginReview = {
           rating: parseInt(comment.rating),
           comment: comment.comment,
           userId: userIds[comment.user_id],

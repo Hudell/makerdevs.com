@@ -1,9 +1,32 @@
 import { MongoDocument } from './MongoDocument';
 
+export type PluginReview = {
+  rating: number;
+  comment: string;
+  userId: string;
+  _createdAt?: Date;
+  _updatedAt?: Date;
+};
+
+export type PluginVersion = {
+  name: string;
+  importedId?: string;
+  downloadLink: string | null;
+  externalLink: string | null;
+  platforms: Array<string>;
+  reviews: Array<PluginReview>;
+  score: number;
+  _createdAt?: Date;
+  _updatedAt?: Date;
+};
+
 export type Plugin = MongoDocument & {
   importedId?: string;
   name: string;
   description: string;
-  platforms: Array<string>;
-
+  help: string;
+  tags: Array<string>;
+  versions: Array<PluginVersion>;
+  reactions: Record<string, Array<string>>,
+  userId: string;
 };

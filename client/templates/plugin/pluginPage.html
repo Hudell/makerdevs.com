@@ -1,123 +1,61 @@
 <template name="pluginPage">
   {{#if isLoaded}}
-    <div class="row">
-      <div class="col-12 col-md-12 col-lg-4 order-1 order-md-1">
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">General Information</h3>
+    <div class="card card-success">
+      <div class="card-body">
+        <h3 class="">{{plugin.name}}</h3>
 
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i></button>
-            </div>
-          </div>
+        <p>
+          by 
+          <span class="username">
+            <a href="/profile/{{plugin.userId}}">{{plugin.author}}</a>
+          </span>
 
-          <div class="card-body">
-            <h3 class="text-primary">{{plugin.name}} <span style="float:right"><i class="fas fa-star mr-1"></i>1/5</span>  </h3>
-            <p class="text-muted">{{plugin.description}}</p>
+        </p>
 
-            <h5 class="mt-5 text-muted">Author</h5>
-              <p class="text-sm">
-                <b class="d-block">Author Username</b>
-              </p>
-
-            <h5 class="mt-5 text-muted">Compatible Platforms</h5>
-            <ul class="list-unstyled">
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> RPG Maker MV</a>
-              </li>
-            </ul>
-
-            <h5 class="mt-5 text-muted">Tags</h5>
-
-            <ul class="list-unstyled">
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> Save</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> Load</a>
-              </li>
-              <li>
-                <a href="" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> autosave</a>
-              </li>
-            </ul>
-
-            <div class="text-center mt-5 mb-3">
-              <a href="#" class="btn btn-sm btn-primary">External Link</a>
-              <a href="#" class="btn btn-sm btn-warning">Download</a>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="col-12 col-md-12 col-lg-8 order-2 order-md-2">
-
-
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Instructions</h3>
-
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i></button>
-            </div>
-          </div>
-
-          <div class="card-body">
-            <div class="row">
-              <div class="col-12">
-                <h4>Instructions</h4>
-                  <div class="post">
-                    <p>
-                      {{#markdown}}{{plugin.help}}{{/markdown}}
-                    </p>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <!-- /.card-body -->
-        </div>
-
-
+        <p class="text-muted mt-2">
+          {{plugin.description}}
+        </p>
       </div>
     </div>
 
+    <div class="row">
+      {{#each file in latestFiles}}
+        <div class="col-12 col-md-12 {{#if file.largeColumn}}col-lg-12{{else}}col-lg-6{{/if}} order-2 order-md-2">
+          <div class="card card-secondary">
+            <div class="card-body">
+              <div class="row">
+                <div class="col-6">
+                  <h3 class="mt-2 text-muted">{{file.name}}</h3>
 
+                  <ul class="list-unstyled">
+                    {{#each platformCode in file.platforms}}
+                      <li>
+                        <a href="/platform/{{platformCode}}" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> {{platformName platformCode}}</a>
+                      </li>
+                    {{/each}}
+                  </ul>
+                </div>
 
+                <div class="col-6">
+                  <div class="text-right mt-2 mb-3">
+                    {{#if file.externalLink}}
+                      <a href="{{file.externalLink}}" class="btn btn-sm btn-primary" target="_blank">External Link</a>
+                    {{/if}}
+                    {{#if file.downloadLink}}
+                      <a href="{{file.downloadLink}}" class="btn btn-sm btn-warning">Download</a>
+                    {{/if}}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{/each}}
+    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div class="card card-primary">
+    <div class="card card-info">
       <div class="card-header">
-        <h3 class="card-title">Reviews</h3>
+        <h3 class="card-title">Instructions</h3>
 
         <div class="card-tools">
           <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
@@ -126,35 +64,63 @@
       </div>
 
       <div class="card-body">
-          <div class="row">
-                <div class="col-12">
-                  <h4>Reviews</h4>
-                    <div class="post">
-                      <div class="user-block">
-                        <img class="img-circle img-bordered-sm" src="https://secure.gravatar.com/avatar/6f9a44ca2e6b1187cd6ea57f6d8c2352?s=128&r=g&d=404" alt="user image">
-                        <span class="username">
-                          <a href="#">thanriu</a>
-                        </span>
-                        <span class="description">04/25/2018 01:45:53</span>
-                      </div>
-                      <!-- /.user-block -->
-                      <p>
-                        just to ask for now, do you have all the .js files? the source (external Link) doesn't work anymore because the user delete their webpage :/ (only 1 stars for now)
-                      </p>
-
-                      <p>
-                        <a href="#" class="link-black text-sm"><i class="fas fa-star mr-1"></i> 1</a>
-                      </p>
-                    </div>
-
-                   
-                </div>
-            
+        <div class="row">
+          <div class="col-12">
+            <div class="post">
+              <p>
+                {{#markdown}}{{plugin.help}}{{/markdown}}
+              </p>
+            </div>
           </div>
         </div>
-        <!-- /.card-body -->
-
+      </div>
     </div>
+
+      <div class="card card-success">
+        <div class="card-header">
+          <h3 class="card-title">Reviews</h3>
+
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              {{#each review in reviews}}
+                <div class="card card-secondary">
+                  <div class="card-body">
+                    <div class="post">
+                      <div class="row">
+                        <div class="col-12 col-lg-11 order-1 order-md-1">
+                          <div class="user-block">
+                            <img class="img-circle img-bordered-sm" src="https://secure.gravatar.com/avatar/6f9a44ca2e6b1187cd6ea57f6d8c2352?s=128&r=g&d=404" alt="user image">
+                            <span class="username">
+                              <a href="/profile/{{review.userId}}">{{review.author}}</a>
+                            </span>
+                            <span class="description">{{review._createdAt}}</span>
+                          </div>
+                        </div>
+
+                        <div class="text-right col-12 col-lg-1 order-2 order-md-2">
+                          <i class="fas fa-star mr-1"></i> {{review.rating}}
+                        </div>
+                      </div>
+                      <div class="col-12">
+                        <p>
+                          {{review.comment}}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {{/each}}
+            </div>
+          </div>
+        </div>
+      </div>
 
   {{else}}
     <div class="overlay">
