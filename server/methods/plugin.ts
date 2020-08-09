@@ -42,6 +42,7 @@ Meteor.methods({
           const reviewUser = Users.findOneById(review.userId);
           if (reviewUser && reviewUser.name) {
             review.author = reviewUser.name;
+            review.authorEmail = reviewUser.emails[0].address;
           } else {
             review.author = 'Unnamed User';
           }
