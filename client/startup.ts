@@ -6,3 +6,6 @@ import './templates/latestPlugins/latestPlugins';
 Meteor.SubsCache = new SubsCache(-1, -1);
 
 BlazeLayout.setRoot('#dynamic-layout');
+
+Meteor.SubsCache.subscribe('userData');
+Meteor.SubsCache.subscribe('allUserData');

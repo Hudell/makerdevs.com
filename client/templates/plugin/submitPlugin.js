@@ -1,0 +1,1 @@
+import './submitPlugin.html';

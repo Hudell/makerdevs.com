@@ -1,5 +1,3 @@
-import { Meteor } from 'meteor/meteor';
-
 import { Base } from './Base';
 import { MongoDocument } from '../lib/types/MongoDocument';
 import { Plugin } from '../lib/types/Plugin';
@@ -23,40 +21,23 @@ class PluginsModel extends Base {
     return this.insert(record);
   }
 
-  public findAllByPlatform(platformCode: string, { sort }: { sort?: Record<string, number>} = {}): Mongo.Cursor<MongoDocument> {
-    const options = {
-      sort,
-    };
-
-    return this.find({
-      platforms: platformCode,
-    }, options);
-  }
-
-  public findAllByPlatformAndSymbol(platformCode: string, symbol: string): Mongo.Cursor<MongoDocument> {
+  public findPlatformMasterlist(platformCode: string): Mongo.Cursor<MongoDocument> {
     const options = {
       sort: {
-        name: -1,
+        name: 1,
+      },
+      fields: {
+        _id: 1,
+        name: 1,
+        description: 1,
       },
     };
 
-    if (!symbol) {
-      return this.findAllByPlatform(platformCode, options);
-    }
+    const query = {
+      'versions.platforms': platformCode,
+    };
 
-    const rgx = new RegExp(symbol === '#' ? '^[^a-zA-Z]' : `^${ symbol }`, 'i');
-    return this.find({
-      platforms: platformCode,
-      name: rgx,
-    }, options);
-  }
-
-  public hasAnyPluginWithSymbolOnPlatform(symbol: string, platformCode: string): boolean {
-    const rgx = new RegExp(symbol === '#' ? '^[^a-zA-Z]' : `^${ symbol }`, 'i');
-    return this.find({
-      platforms: platformCode,
-      name: rgx,
-    }).count() > 0;
+    return this.find(query, options);
   }
 }
 
