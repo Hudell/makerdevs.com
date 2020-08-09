@@ -1,14 +1,12 @@
-import { Meteor } from 'meteor/meteor';
 import './startup';
 import './users';
 
 import '../models/Platforms';
 import '../models/Plugins';
-import '../models/PluginVersions';
-import '../models/Reviews';
+import '../models/Users';
 
 import './publications/plugins';
-import './publications/latestPlugins';
+import './publications/users';
 
 import './methods/plugin';
 

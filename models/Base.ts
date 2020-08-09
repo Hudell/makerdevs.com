@@ -6,8 +6,8 @@ export class Base {
   protected _db: Mongo.Collection<MongoDocument>;
   protected _name: string;
 
-  constructor(name: string) {
-    this._db = new Mongo.Collection(name);
+  constructor(name: string, db: Mongo.Collection<MongoDocument> | undefined = undefined) {
+    this._db = db || new Mongo.Collection(name);
     this._name = name;
   }
 
@@ -35,8 +35,13 @@ export class Base {
   }
 
   protected insert(record, ...args): string {
-    record._createdAt = new Date();
-    record._updatedAt = new Date();
+    if (!record._createdAt) {
+      record._createdAt = new Date();
+    }
+
+    if (!record._updatedAt) {
+      record._updatedAt = new Date();
+    }
     const result = this._db.insert(record, ...args);
     record._id = result;
     return result;
