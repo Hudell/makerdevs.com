@@ -88,7 +88,7 @@ export class Base {
     return this.findAll({
       limit,
       sort: {
-        _updatedAt: -1,
+        _createdAt: -1,
       },
     });
   }
