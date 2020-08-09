@@ -93,8 +93,6 @@ Template.pluginPage.onCreated(function() {
       return;
     }
 
-    console.log(data);
-
     Session.set('pageTitle', `Plugin Details - ${ data.name }`);
     this.plugin.set(data);
   });

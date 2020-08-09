@@ -1,6 +1,7 @@
 Accounts.onCreateUser((options, user) => {
   if (user.services?.github) {
     user.name = user.services.github.username;
+    user.emails = user.services.github.emails;
   }
 
   if (!user.name) {
