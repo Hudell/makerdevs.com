@@ -1,9 +1,12 @@
 import { Meteor } from 'meteor/meteor';
-import { check } from 'meteor/check'
+import { Match, check } from 'meteor/check';
 
 import Plugins from '../../models/Plugins';
 import Platforms from '../../models/Platforms';
 import Users from '../../models/Users';
+import Files from '../../models/Files';
+import Clicks from '../../models/Clicks';
+import { UploadedPlugin, Plugin } from '../../lib/types/Plugin';
 
 Meteor.methods({
   'plugin/details'(pluginId) {
@@ -51,5 +54,103 @@ Meteor.methods({
     }
 
     return plugin;
-  }
+  },
+
+  'plugin/submit'(pluginData: UploadedPlugin) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(pluginData, {
+      name: String,
+      description: Match.Optional(String),
+      public: Boolean,
+      versionName: String,
+      externalLink: Match.Optional(String),
+      platforms: [String],
+      help: Match.Optional(String),
+      fileHeader: Match.Optional({
+        name: String,
+        size: Number,
+        type: String,
+      }),
+      fileData: Match.Optional(String),
+    });
+
+    const name = pluginData.name.trim().substr(0, 60);
+    const description = pluginData.description?.trim().substr(0, 100);
+    const versionName = pluginData.versionName.trim().substr(0, 40);
+    const externalLink = pluginData.externalLink?.trim();
+    const help = pluginData.help?.trim();
+    const { fileHeader, fileData } = pluginData;
+
+    if (!pluginData.platforms.length) {
+      throw new Meteor.Error('invalid-data', 'missing-platform');
+    }
+
+    for (const platformCode of pluginData.platforms) {
+      const platform = Platforms.findOneById(platformCode);
+      if (!platform) {
+        throw new Meteor.Error('invalid-data', 'unknown-platform', platformCode);
+      }
+    }
+
+    if (!externalLink && !fileData) {
+      throw new Meteor.Error('invalid-data', 'missing-file');
+    }
+
+    let fileId;
+
+    if (fileData) {
+      const maxFileSize = 1024 * 1024;
+      const allowedTypes = [
+        'application/x-7z-compressed',
+        'application/zip',
+        'application/x-rar-compressed',
+        'text/javascript'
+      ];
+
+      if (!fileHeader) {
+        throw new Meteor.Error('invalid-data');
+      }
+      if (fileHeader.size > maxFileSize) {
+        throw new Meteor.Error('invalid-data');
+      }
+      if (!allowedTypes.includes(fileHeader.type)) {
+        throw new Meteor.Error('invalid-data');
+      }
+      if (fileData.length > maxFileSize * 1.1) {
+        throw new Meteor.Error('invalid-data');
+      }
+
+      fileId = Files.insertFile(fileHeader.name, fileHeader.size, fileHeader.type, fileData);
+    }
+
+    const newPluginData: Plugin = {
+      name,
+      description,
+      help,
+      tags: [],
+      versions: [],
+      reactions: {},
+      userId,
+    };
+
+    newPluginData.versions.push({
+      name: versionName,
+      externalLink,
+      fileId,
+      platforms: pluginData.platforms,
+      reviews: [],
+      score: 0,
+    });
+
+    return Plugins.addPlugin(newPluginData);
+  },
+
+  'plugin/click'(pluginId: string) {
+    const address = this.connection?.clientAddress;
+    Clicks.insertClick(pluginId, Meteor.userId(), address);
+  },
 });

@@ -78,6 +78,13 @@ Template.pluginPage.helpers({
   },
 });
 
+Template.pluginPage.events({
+  'click .download-link'(e, instance) {
+    const pluginId = FlowRouter.getParam('pluginId');
+    Meteor.call('plugin/click', pluginId);
+  },
+});
+
 Template.pluginPage.onCreated(function() {
   const pluginId = FlowRouter.getParam('pluginId');
 

@@ -11,11 +11,12 @@ export type PluginReview = {
 export type PluginVersion = {
   name: string;
   importedId?: string;
-  downloadLink: string | null;
-  externalLink: string | null;
+  downloadLink?: string | null;
+  externalLink?: string | null;
   platforms: Array<string>;
   reviews: Array<PluginReview>;
   score: number;
+  fileId?: string | null;
   _createdAt?: Date;
   _updatedAt?: Date;
 };
@@ -30,3 +31,15 @@ export type Plugin = MongoDocument & {
   reactions: Record<string, Array<string>>,
   userId: string;
 };
+
+export type UploadedPlugin = {
+  name: string;
+  platforms: Array<string>;
+  description: string;
+  public: boolean;
+  versionName: string;
+  externalLink: string;
+  help: string;
+  fileHeader: Record<string, any>;
+  fileData: string;
+}

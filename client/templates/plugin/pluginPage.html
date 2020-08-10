@@ -39,10 +39,13 @@
                 <div class="col-6">
                   <div class="text-right mt-2 mb-3">
                     {{#if file.externalLink}}
-                      <a href="{{file.externalLink}}" class="btn btn-sm btn-primary" target="_blank">External Link</a>
+                      <a href="{{file.externalLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary download-link">External Link</a>
+                    {{/if}}
+                    {{#if file.fileId}}
+                      <a href="/download/{{file.fileId}}" class="btn btn-sm btn-warning download-link">Download</a>
                     {{/if}}
                     {{#if file.downloadLink}}
-                      <a href="{{file.downloadLink}}" class="btn btn-sm btn-warning">Download</a>
+                      <a href="{{file.downloadLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-warning download-link">Download</a>
                     {{/if}}
                   </div>
                 </div>
@@ -53,29 +56,32 @@
       {{/each}}
     </div>
 
-    <div class="card card-info">
-      <div class="card-header">
-        <h3 class="card-title">Instructions</h3>
+    {{#if plugin.help}}
+      <div class="card card-info">
+        <div class="card-header">
+          <h3 class="card-title">Instructions</h3>
 
-        <div class="card-tools">
-          <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-            <i class="fas fa-minus"></i></button>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
+          </div>
         </div>
-      </div>
 
-      <div class="card-body">
-        <div class="row">
-          <div class="col-12">
-            <div class="post">
-              <p>
-                {{#markdown}}{{plugin.help}}{{/markdown}}
-              </p>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="post">
+                <p>
+                  {{#markdown}}{{plugin.help}}{{/markdown}}
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    {{/if}}
 
+    {{#if reviews}}
       <div class="card card-success">
         <div class="card-header">
           <h3 class="card-title">Reviews</h3>
@@ -121,6 +127,7 @@
           </div>
         </div>
       </div>
+    {{/if}}
 
   {{else}}
     <div class="overlay">
