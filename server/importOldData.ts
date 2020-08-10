@@ -71,7 +71,7 @@ Meteor.startup(() => {
       const versionData: PluginVersion = {
         name: version.name,
         importedId: version.id,
-        downloadLink: version.download_link,
+        downloadLink: version.download_link ? `https://mvplugins.com/${ version.download_link}` : undefined,
         externalLink: version.external_link,
         platforms: ['mv'],
         reviews: [],
