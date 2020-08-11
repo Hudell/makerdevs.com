@@ -149,6 +149,27 @@ FlowRouter.route('/plugin/review/:pluginId', {
   }
 });
 
+
+let oldSub: any;
+FlowRouter.route('/search/:query', {
+  async action(params: { query: string | undefined }) {
+    await import('../client/templates/search/results');
+
+    if (oldSub) {
+      oldSub.stopNow();
+    }
+
+    oldSub = Meteor.SubsCache.subscribe('plugins', params.query);
+    useTemplate('searchResults', 'Search Results');
+  }
+});
+
+FlowRouter.route('/search', {
+  async action() {
+    FlowRouter.go('/home');
+  }
+});
+
 FlowRouter.route('/mvplugin/:importedId', {
   async action() {
     await import('../client/templates/plugin/pluginPage');
