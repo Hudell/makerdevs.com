@@ -9,6 +9,7 @@ export type PluginReview = {
 };
 
 export type PluginVersion = {
+  _id: string;
   name: string;
   importedId?: string;
   downloadLink?: string | null;

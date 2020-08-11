@@ -15,6 +15,35 @@
         <p class="text-muted mt-2">
           {{plugin.description}}
         </p>
+
+        {{#if currentUser}}
+          <p></p>
+          <div class="">
+            <a class="btn btn-outline-primary {{#if liked}}btn-info{{/if}} like-btn">
+              <i class="fa fa-thumbs-up"></i> Like{{#if liked}}d{{/if}}
+            </a>
+            {{#if canReview}}
+              <a class="btn btn-outline-primary review-btn">
+                <i class="fa fa-comment"></i> Review
+              </a>
+            {{/if}}
+            {{#if canEdit}}
+              <a class="btn btn-outline-primary edit-btn">
+                <i class="fa fa-edit"></i> Edit
+              </a>
+            {{/if}}
+          </div>
+        {{/if}}
+
+        {{#if likeCount}}
+          <p class="text-muted mt-2">
+            {{#if singleLike}}
+            Liked by <span class="red">1</span> user.
+            {{else}}
+            Liked by <span class="red">{{likeCount}}</span> users.
+            {{/if}}
+          </p>
+        {{/if}}
       </div>
     </div>
 
@@ -39,14 +68,23 @@
                 <div class="col-6">
                   <div class="text-right mt-2 mb-3">
                     {{#if file.externalLink}}
-                      <a href="{{file.externalLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-primary download-link">External Link</a>
+                      <a href="{{file.externalLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-primary download-link">
+                        <i class="fa fa-link"></i> External Link
+                    </a>
                     {{/if}}
                     {{#if file.fileId}}
-                      <a href="/download/{{file.fileId}}" class="btn btn-sm btn-warning download-link">Download</a>
+                      <a href="/download/{{file.fileId}}" target="_blank" rel="noopener noreferrer" class="btn btn-success download-link">
+                        <i class="fa fa-times"></i> Download
+                      </a>
                     {{/if}}
                     {{#if file.downloadLink}}
-                      <a href="{{file.downloadLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-warning download-link">Download</a>
+                      <a href="{{file.downloadLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-success download-link">
+                        <i class="fa fa-times"></i> Download
+                      </a>
                     {{/if}}
+                    <a href="/report/{{file._id}}" class="btn btn-warning">
+                      <i class="fa fa-times"></i> Report
+                    </a>
                   </div>
                 </div>
               </div>
