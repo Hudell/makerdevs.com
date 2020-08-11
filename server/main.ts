@@ -1,3 +1,5 @@
+import './routes';
+
 import './startup';
 import './users';
 

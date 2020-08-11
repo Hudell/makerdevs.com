@@ -50,6 +50,19 @@ FlowRouter.route('/home', {
   }
 });
 
+FlowRouter.route('/me', {
+  async action() {
+    if (!Meteor.userId()) {
+      toastr.error("You need to be logged in to see your profile.");
+      FlowRouter.go('/login');
+      return;
+    }
+
+    await import('../client/templates/profile/profile');
+    useTemplate('profile', 'My Profile');
+  }
+});
+
 FlowRouter.route('/about', {
   async action() {
     await import('../client/templates/about/about');
@@ -67,7 +80,7 @@ FlowRouter.route('/latest', {
   }
 });
 
-FlowRouter.route('/profile/:username', {
+FlowRouter.route('/profile/:userId', {
   async action() {
     await import('../client/templates/profile/profile');
 
@@ -116,8 +129,9 @@ FlowRouter.route('/plugin/:pluginId', {
 });
 
 FlowRouter.route('/platform/:platformCode', {
-  async action() {
-    
+  async action(params: { platformCode: 'string'}) {
+    // For now, just redirect to the plugin masterlist
+    FlowRouter.go(`/${ params.platformCode }/master-list`);
   }
 });
 
