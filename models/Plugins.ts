@@ -1,6 +1,6 @@
 import { Base } from './Base';
 import { MongoDocument } from '../lib/types/MongoDocument';
-import { Plugin } from '../lib/types/Plugin';
+import { Plugin, ModifiedPlugin, SubmittedReview } from '../lib/types/Plugin';
 
 class PluginsModel extends Base {
   constructor() {
@@ -71,6 +71,79 @@ class PluginsModel extends Base {
     const data = {
       $pull: {
         'reactions.like': userId,
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public updatePlugin(newData: ModifiedPlugin): void {
+    const query = {
+      _id: newData._id,
+    };
+
+    const data = {
+      $set: {
+        name: newData.name,
+        description: newData.description,
+        public: newData.public,
+        help: newData.help,
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public addUserReview(userId: string, reviewData: SubmittedReview): void {
+    const query = {
+      _id: reviewData.pluginId,
+    };
+
+    const data = {
+      $addToSet: {
+        reviews: {
+          userId,
+          rating: reviewData.rating,
+          comment: reviewData.comment,
+          _createdAt: new Date(),
+          _updatedAt: new Date(),
+        }
+      },
+    };
+
+
+
+    this.update(query, data);
+  }
+
+  public updateUserReview(userId: string, reviewData: SubmittedReview): void {
+    const query = {
+      _id: reviewData.pluginId,
+      'reviews.userId': userId,
+    };
+
+    const data = {
+      $set: {
+        'reviews.$.rating': reviewData.rating,
+        'reviews.$.comment': reviewData.comment,
+        'reviews.$._updatedAt': new Date(),
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public removeUserReview(userId: string, pluginId: string): void {
+    const query = {
+      _id: pluginId,
+      'reviews.userId': userId,
+    };
+
+    const data = {
+      $pull: {
+        'reviews': {
+          'userId': userId,
+        },
       },
     };
 

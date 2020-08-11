@@ -7,6 +7,7 @@ import toastr from 'toastr';
 import gravatar from 'gravatar';
 
 import Plugins from '../../../models/Plugins';
+import { Modal } from '../../utils/modal';
 import './pluginPage.html';
 
 const getPlugin = () => {
@@ -89,12 +90,7 @@ Template.pluginPage.helpers({
   reviews() {
     const plugin = getPlugin();
 
-    const allReviews = [];
-    for (const version of plugin.versions) {
-      allReviews.push(...version.reviews);
-    }
-
-    return allReviews.sort((item1, item2) => item2._createdAt - item1._createdAt);
+    return plugin.reviews?.sort((item1, item2) => item2._createdAt - item1._createdAt);
   },
   avatarUrl(email) {
     return gravatar.url(email, {}, true);
@@ -139,7 +135,7 @@ Template.pluginPage.helpers({
   singleLike() {
     const plugin = getPlugin();
     return plugin.reactions?.like?.length === 1;
-  }
+  },
 });
 
 Template.pluginPage.events({
@@ -155,18 +151,33 @@ Template.pluginPage.events({
   },
   'click .edit-btn'(e, instance) {
     const pluginId = FlowRouter.getParam('pluginId');
-    FlowRouter.go(`edit/${ pluginId }`);
+    FlowRouter.go(`/plugin/edit/${ pluginId }`);
 
   },
   'click .review-btn'(e, instance) {
     const pluginId = FlowRouter.getParam('pluginId');
-    FlowRouter.go(`review/${ pluginId }`);
+    FlowRouter.go(`/plugin/review/${ pluginId }`);
+  },
+  'click .delete-review-btn'(e, instance) {
+    Modal.show('Do you want to delete your review?', 'Click Confirm to permanently delete your review.', () => {
+      const pluginId = FlowRouter.getParam('pluginId');
+
+      Meteor.call('plugin/review/delete', pluginId, (err, result) => {
+        if (err) {
+          console.log(err);
+          toastr.error("Failed to delete the review. Try again.");
+          return;
+        }
+
+        toastr.success("Review deleted successfully.");
+        refreshData(instance);
+      });
+
+     });
   }
 });
 
 Template.pluginPage.onCreated(function() {
-  const pluginId = FlowRouter.getParam('pluginId');
-
   this.plugin = new ReactiveVar(false);
   this.isLoaded = new ReactiveVar(false);
 

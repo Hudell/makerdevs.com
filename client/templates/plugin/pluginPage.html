@@ -74,12 +74,12 @@
                     {{/if}}
                     {{#if file.fileId}}
                       <a href="/download/{{file.fileId}}" target="_blank" rel="noopener noreferrer" class="btn btn-success download-link">
-                        <i class="fa fa-times"></i> Download
+                        <i class="fa fa-download"></i> Download
                       </a>
                     {{/if}}
                     {{#if file.downloadLink}}
                       <a href="{{file.downloadLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-success download-link">
-                        <i class="fa fa-times"></i> Download
+                        <i class="fa fa-download"></i> Download
                       </a>
                     {{/if}}
                     <a href="/report/{{file._id}}" class="btn btn-warning">
@@ -137,8 +137,9 @@
                 <div class="card card-secondary">
                   <div class="card-body">
                     <div class="post">
+
                       <div class="row">
-                        <div class="col-12 col-lg-11 order-1 order-md-1">
+                        <div class="col-auto col-lg-11 order-1 order-md-1">
                           <div class="user-block">
                             <img class="img-circle img-bordered-sm" src="{{avatarUrl review.authorEmail}}" alt="user image">
                             <span class="username">
@@ -148,15 +149,32 @@
                           </div>
                         </div>
 
-                        <div class="text-right col-12 col-lg-1 order-2 order-md-2">
-                          <i class="fas fa-star mr-1"></i> {{review.rating}}
-                        </div>
                       </div>
                       <div class="col-12">
                         <p>
                           {{review.comment}}
                         </p>
+
+                        <h4>
+                          <i class="fas fa-star mr-1"></i> {{review.rating}}
+                          {{#if isUser review.userId}}
+                            <a class="btn btn-outline-primary review-btn ml-4">
+                              <i class="fa fa-edit"></i>
+                            </a>
+                            <a class="btn btn-outline-primary delete-review-btn">
+                              <i class="fa fa-trash"></i>
+                            </a>
+                          {{/if}}
+                        </h4>
                       </div>
+                      {{#if isUser review.userId}}
+                      <div class="ribbon-wrapper ribbon-lg">
+                        <div class="ribbon bg-success text-lg">
+                          YOU
+                        </div>
+                      </div>
+                      {{/if}}
+
                     </div>
                   </div>
                 </div>
@@ -168,7 +186,7 @@
     {{/if}}
 
   {{else}}
-    <div class="overlay">
+    <div class="overlay text-center">
       <i class="fas fa-2x fa-sync-alt fa-spin"></i>
     </div>
   {{/if}}
