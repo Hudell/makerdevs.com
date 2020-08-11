@@ -1,0 +1,11 @@
+<template name="searchResults">
+
+  <h4>Showing {{resultCount}} results</h4>
+
+  <ul>
+  {{#each plugin in plugins}}
+    {{> pluginLiteCard plugin=plugin}}
+  {{/each}}
+  </ul>
+
+</template>

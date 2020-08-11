@@ -1,5 +1,3 @@
-import { Meteor } from 'meteor/meteor';
-
 import { Base } from './Base';
 
 class PlatformsModel extends Base {

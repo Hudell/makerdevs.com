@@ -11,6 +11,12 @@ export class Base {
     this._name = name;
   }
 
+  protected ensureIndex(keys: { [key: string]: number | string } | string, options?: { [key: string]: any }): void {
+    if (Meteor.isServer) {
+      this._db._ensureIndex(keys, options);
+    }
+  }
+
   protected find(query = {}, options = {}): Mongo.Cursor<MongoDocument> {
     return this._db.find(query, options);
   }
@@ -19,7 +25,7 @@ export class Base {
     return this.find({ _id }, options);
   }
 
-  protected findOne(query = {}, options = {}): MongoDocument {
+  protected findOne(query = {}, options = {}): MongoDocument | undefined {
     return this._db.findOne(query, options);
   }
 
@@ -34,7 +40,7 @@ export class Base {
     return record;
   }
 
-  protected insert(record, ...args): string {
+  protected insert(record: Record<string, any>): string {
     if (!record._createdAt) {
       record._createdAt = new Date();
     }
@@ -42,23 +48,23 @@ export class Base {
     if (!record._updatedAt) {
       record._updatedAt = new Date();
     }
-    const result = this._db.insert(record, ...args);
+    const result = this._db.insert(record);
     record._id = result;
     return result;
   }
 
-  protected update(query, update, options = {}): void {
+  protected update(query: Record<string, any>, update: Record<string, any>, options: Record<string, any> = {}): void {
     this.setUpdatedAt(update);
 
     this._db.update(query, update, options);
   }
 
-  protected upsert(query, update, options = {}): void {
+  protected upsert(query: Record<string, any>, update: Record<string, any>, options: Record<string, any> = {}): void {
     options.upsert = true;
     this.update(query, update, options);
   }
 
-  protected remove(query): void {
+  protected remove(query: Record<string, any>): void {
     const records = this._db.find(query).fetch();
 
     const ids = [];
@@ -71,7 +77,7 @@ export class Base {
     this._db.remove(query);
   }
 
-  public findOneById(_id: string): MongoDocument {
+  public findOneById(_id: string): MongoDocument | undefined {
     return this.findOne({ _id }, {});
   }
 

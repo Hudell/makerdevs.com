@@ -31,6 +31,7 @@ export type Plugin = MongoDocument & {
   reviews: Array<PluginReview>;
   score: number;
   userId: string;
+  public: boolean;
 };
 
 export type UploadedPlugin = {

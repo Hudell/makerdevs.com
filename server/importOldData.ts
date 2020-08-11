@@ -58,6 +58,7 @@ Meteor.startup(() => {
       versions: [],
       reviews: [],
       score: 0,
+      public: true,
       reactions: {
       },
       userId: userIds[plugin.user_id],

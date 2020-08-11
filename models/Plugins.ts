@@ -5,6 +5,8 @@ import { Plugin, ModifiedPlugin, SubmittedReview } from '../lib/types/Plugin';
 class PluginsModel extends Base {
   constructor() {
     super('plugins');
+    this.ensureIndex('userId');
+    this.ensureIndex('public');
   }
 
   public findOneByImportedId(importedId: string): Plugin | undefined {
@@ -146,6 +148,30 @@ class PluginsModel extends Base {
     };
 
     this.update(query, data);
+  }
+
+  public searchPlugins(filter: string): Mongo.Cursor<MongoDocument> {
+    const query = {
+      $or: [
+        {
+          public: true,
+          name: new RegExp(`.*${ filter }.*`, 'i'),
+        },
+        {
+          public: true,
+          description: new RegExp(`.*${ filter }.*`, 'i'),
+        }
+      ]
+    };
+
+    const options = {
+      fields: {
+        name: 1,
+        description: 1,
+      }
+    };
+
+    return this.find(query, options);
   }
 }
 
