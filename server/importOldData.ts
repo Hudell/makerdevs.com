@@ -56,6 +56,8 @@ Meteor.startup(() => {
       help: plugin.help || '',
       tags: (plugin.tags || '').split(',').map(tag => tag.trim()),
       versions: [],
+      reviews: [],
+      score: 0,
       reactions: {
       },
       userId: userIds[plugin.user_id],
@@ -75,8 +77,6 @@ Meteor.startup(() => {
         downloadLink: version.download_link ? `https://mvplugins.com/${ version.download_link}` : undefined,
         externalLink: version.external_link,
         platforms: ['mv'],
-        reviews: [],
-        score: 0,
         _createdAt: new Date(`${ version.created_at }Z`),
         _updatedAt: new Date(`${ version.updated_at }Z`),
       };
@@ -101,7 +101,7 @@ Meteor.startup(() => {
           pluginData.reactions.like.push(commentData.userId);
         }
 
-        versionData.reviews.push(commentData);
+        pluginData.reviews.push(commentData);
       }
 
       pluginData.versions.push(versionData);

@@ -15,8 +15,6 @@ export type PluginVersion = {
   downloadLink?: string | null;
   externalLink?: string | null;
   platforms: Array<string>;
-  reviews: Array<PluginReview>;
-  score: number;
   fileId?: string | null;
   _createdAt?: Date;
   _updatedAt?: Date;
@@ -30,6 +28,8 @@ export type Plugin = MongoDocument & {
   tags: Array<string>;
   versions: Array<PluginVersion>;
   reactions: Record<string, Array<string>>,
+  reviews: Array<PluginReview>;
+  score: number;
   userId: string;
 };
 
@@ -43,4 +43,18 @@ export type UploadedPlugin = {
   help: string;
   fileHeader: Record<string, any>;
   fileData: string;
-}
+};
+
+export type ModifiedPlugin = {
+  _id: string;
+  name: string;
+  description: string;
+  public: boolean;
+  help: string;
+};
+
+export type SubmittedReview = {
+  pluginId: string;
+  comment: string;
+  rating: number;
+};

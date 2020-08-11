@@ -1,0 +1,47 @@
+<template name="reviewPlugin">
+  {{#if isLoaded}}
+      <!-- general form elements -->
+      <form role="form">
+
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">Writing Review</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="pluginRating">Rating</label>
+
+                  <h1>
+                    <div class="star-container">
+                      <i class="fa{{#if gte starCount 1}}s{{else}}r{{/if}} fa-star" data-rate="1"></i>
+                      <i class="fa{{#if gte starCount 2}}s{{else}}r{{/if}} fa-star" data-rate="2"></i>
+                      <i class="fa{{#if gte starCount 3}}s{{else}}r{{/if}} fa-star" data-rate="3"></i>
+                      <i class="fa{{#if gte starCount 4}}s{{else}}r{{/if}} fa-star" data-rate="4"></i>
+                      <i class="fa{{#if gte starCount 5}}s{{else}}r{{/if}} fa-star" data-rate="5"></i>
+                    </div>
+                  </h1>
+                  
+                </div>
+
+                <div class="form-group">
+                  <label for="pluginReview">Your Review</label>
+                  <textarea class="form-control" rows="10" placeholder="Enter your review here" id="pluginReview">{{review.comment}}</textarea>
+                </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary submit">Submit</button>
+                  <button type="button" class="btn btn-secondary cancel">Cancel</button>
+                </div>
+              </div>
+              <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+      </form>
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}  
+</template>

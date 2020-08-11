@@ -6,7 +6,7 @@ import Platforms from '../../models/Platforms';
 import Users from '../../models/Users';
 import Files from '../../models/Files';
 import Clicks from '../../models/Clicks';
-import { UploadedPlugin, Plugin } from '../../lib/types/Plugin';
+import { UploadedPlugin, Plugin, ModifiedPlugin, SubmittedReview } from '../../lib/types/Plugin';
 
 Meteor.methods({
   'plugin/details'(pluginId) {
@@ -36,19 +36,15 @@ Meteor.methods({
 
       plugin.platforms = platforms.map(code => Platforms.findOneById(code));
 
-      for (const version of plugin.versions) {
-        if (!version) continue;
+      for (const review of plugin.reviews) {
+        if (!review) continue;
 
-        for (const review of version.reviews) {
-          if (!review) continue;
-
-          const reviewUser = Users.findOneById(review.userId);
-          if (reviewUser && reviewUser.name) {
-            review.author = reviewUser.name;
-            review.authorEmail = reviewUser.emails[0].address;
-          } else {
-            review.author = 'Unnamed User';
-          }
+        const reviewUser = Users.findOneById(review.userId);
+        if (reviewUser && reviewUser.name) {
+          review.author = reviewUser.name;
+          review.authorEmail = reviewUser.emails[0].address;
+        } else {
+          review.author = 'Unnamed User';
         }
       }
     }
@@ -134,7 +130,10 @@ Meteor.methods({
       tags: [],
       versions: [],
       reactions: {},
+      reviews: [],
+      score: 0,
       userId,
+      public: pluginData.public,
     };
 
     newPluginData.versions.push({
@@ -143,11 +142,99 @@ Meteor.methods({
       externalLink,
       fileId,
       platforms: pluginData.platforms,
-      reviews: [],
-      score: 0,
     });
 
     return Plugins.addPlugin(newPluginData);
+  },
+
+  'plugin/edit'(pluginData: ModifiedPlugin) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(pluginData, {
+      _id: String,
+      name: String,
+      description: Match.Optional(String),
+      public: Boolean,
+      help: Match.Optional(String),
+    });
+
+    const plugin = Plugins.findOneById(pluginData._id);
+    if (!plugin) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    if (plugin.userId !== userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    Plugins.updatePlugin(pluginData);
+  },
+
+  'plugin/review'(reviewData: SubmittedReview) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(reviewData, {
+      pluginId: String,
+      comment: String,
+      rating: Number,
+    });
+
+    const plugin = Plugins.findOneById(reviewData.pluginId);
+    if (!plugin) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    if (plugin.userId === userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    if (!reviewData.rating || isNaN(Number(reviewData.rating)) || reviewData.rating > 5) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    if (!reviewData.comment) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    for (const review of plugin.reviews) {
+      if (review.userId === userId) {
+        Plugins.updateUserReview(userId, reviewData);
+        return;
+      }
+    }
+
+    Plugins.addUserReview(userId, reviewData);
+  },
+
+  'plugin/review/delete'(pluginId: string) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(pluginId, String);
+
+    const plugin = Plugins.findOneById(pluginId);
+    if (!plugin) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    if (plugin.userId === userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    for (const review of plugin.reviews) {
+      if (review.userId === userId) {
+        Plugins.removeUserReview(userId, pluginId);
+        return;
+      }
+    }
   },
 
   'plugin/click'(pluginId: string) {
@@ -166,7 +253,6 @@ Meteor.methods({
     } else {
       Plugins.like(pluginId, userId);
     }
-
   },
 });
 

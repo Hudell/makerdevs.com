@@ -1,0 +1,93 @@
+<template name="editPlugin">
+  {{#if isLoaded}}
+  <div class="row">
+    <!-- left column -->
+    <div class="col-md-6">
+      <!-- general form elements -->
+      <form role="form">
+
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">General Information</h3>
+            </div>
+            <!-- /.card-header -->
+            <!-- form start -->
+              <div class="card-body">
+                <div class="form-group">
+                  <label for="pluginName">Plugin Name</label>
+                  <input type="text" class="form-control" id="pluginName" placeholder="Enter plugin name" maxlength="60" value="{{plugin.name}}">
+                </div>
+                <div class="form-group">
+                  <label for="pluginDescription">Summary</label>
+                  <input type="text" class="form-control" id="pluginDescription" placeholder="Enter a short description" maxlength="255" value="{{plugin.description}}">
+                </div>
+
+                <div class="form-group">
+                  <label>Plugin Visibility</label>
+
+                  <div class="custom-control custom-radio">
+                    <input class="custom-control-input" type="radio" id="pluginPublic" name="pluginVisibility" checked={{plugin.public}}>
+                    <label for="pluginPublic" class="custom-control-label">Published</label>
+                  </div>
+                  <div class="custom-control custom-radio">
+                    <input class="custom-control-input" type="radio" id="pluginDraft" name="pluginVisibility" checked={{isDraft}}>
+                    <label for="pluginDraft" class="custom-control-label">Draft</label>
+                  </div>
+                </div>
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary submit">Submit</button>
+                  <button type="button" class="btn btn-secondary cancel">Cancel</button>
+                </div>
+              </div>
+              <!-- /.card-body -->
+          </div>
+          <!-- /.card -->
+      </form>
+    </div>
+    <!--/.col (left) -->
+    <!-- right column -->
+    <div class="col-md-6">
+      <!-- general form elements disabled -->
+      <div class="card card-warning">
+        <div class="card-header">
+          <h3 class="card-title">Instructions</h3>
+        </div>
+        <!-- /.card-header -->
+        <div class="card-body">
+          <form role="form">
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- textarea -->
+                <div class="form-group">
+                  <label>Instructions</label>
+                  <textarea class="form-control" rows="10" placeholder="Enter plugin instructions here" id="pluginHelp">{{plugin.help}}</textarea>
+
+                  <p class="text-muted">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" rel="noreferrer noopener" target="_blank">Markdown</a> to format your instructions.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <!-- textarea -->
+                <div class="form-group">
+                  <label>Instructions Preview</label>
+                  {{#markdown}}{{helpPreview}}{{/markdown}}
+                </div>
+              </div>
+            </div>
+              
+          </form>
+        </div>
+        <!-- /.card-body -->
+      </div>
+    </div>
+    <!--/.col (right) -->
+  </div>
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}  
+</template>

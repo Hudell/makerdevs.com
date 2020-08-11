@@ -1,6 +1,7 @@
 import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from 'meteor/session';
+import toastr from 'toastr';
 
 const useTemplate = (templateName: string, pageTitle: string, breadcrumbs: Array<String> = []) => {
   Session.set('pageTitle', pageTitle);
@@ -22,6 +23,7 @@ FlowRouter.route('/', {
 FlowRouter.route('/login', {
   async action() {
     if (Meteor.userId()) {
+      toastr.error("You are already logged in.");
       FlowRouter.go('/home');
       return;
     }
@@ -96,7 +98,8 @@ FlowRouter.route('/mz/master-list', {
 FlowRouter.route('/plugin/submit', {
   async action() {
     if (!Meteor.userId()) {
-      FlowRouter.go('/home');
+      toastr.error("You need to be logged in to submit a plugin.");
+      FlowRouter.go('/login');
       return;
     }
 
@@ -118,15 +121,17 @@ FlowRouter.route('/platform/:platformCode', {
   }
 });
 
-FlowRouter.route('/edit/:pluginId', {
+FlowRouter.route('/plugin/edit/:pluginId', {
   async action() {
-    
+    await import('../client/templates/plugin/editPlugin');
+    useTemplate('editPlugin', 'Edit Plugin');
   }
 });
 
-FlowRouter.route('/review/:pluginId', {
+FlowRouter.route('/plugin/review/:pluginId', {
   async action() {
-    
+    await import('../client/templates/plugin/reviewPlugin');
+    useTemplate('reviewPlugin', 'Review Plugin');
   }
 });
 
