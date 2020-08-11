@@ -33,6 +33,19 @@ FlowRouter.route('/login', {
   }
 });
 
+FlowRouter.route('/register', {
+  async action() {
+    if (Meteor.userId()) {
+      toastr.error("You are already logged in.");
+      FlowRouter.go('/home');
+      return;
+    }
+
+    await import('../client/templates/user/register');
+    useTemplate('register', 'User Registration');
+  }
+});
+
 FlowRouter.route('/logout', {
   async action() {
     Meteor.logout(function() {
@@ -160,7 +173,7 @@ FlowRouter.route('/search/:query', {
     }
 
     oldSub = Meteor.SubsCache.subscribe('plugins', params.query);
-    useTemplate('searchResults', 'Search Results');
+    useTemplate('searchResults', `Searching for "${ params.query }"`);
   }
 });
 

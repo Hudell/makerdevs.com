@@ -13,4 +13,5 @@ import './publications/plugins';
 import './publications/users';
 
 import './methods/plugin';
+import './methods/users';
 

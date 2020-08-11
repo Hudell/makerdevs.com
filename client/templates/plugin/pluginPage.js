@@ -26,6 +26,12 @@ const refreshData = (instance) => {
       return;
     }
 
+    if (!data) {
+      instance.isInvalid.set(true);
+      Session.set('pageTitle', 'Invalid Plugin Id');
+      return;
+    }
+
     Session.set('pageTitle', `Plugin Details - ${ data.name }`);
     instance.plugin.set(data);
   });  
@@ -72,6 +78,9 @@ Template.pluginPage.helpers({
   },
   isLoaded() {
     return Template.instance().isLoaded.get();
+  },
+  isValid() {
+    return !Template.instance().isInvalid.get();
   },
   latestFiles() {
     return getLatestFiles();
@@ -180,6 +189,7 @@ Template.pluginPage.events({
 Template.pluginPage.onCreated(function() {
   this.plugin = new ReactiveVar(false);
   this.isLoaded = new ReactiveVar(false);
+  this.isInvalid = new ReactiveVar(false);
 
   refreshData(this);
 });

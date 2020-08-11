@@ -4,10 +4,6 @@ Accounts.onCreateUser((options, user) => {
     user.emails = user.services.github.emails;
   }
 
-  if (!user.name) {
-    user.name = 'Game Creator';
-  }
-
   return user;
 });
 

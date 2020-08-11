@@ -16,4 +16,8 @@ Template.searchResults.helpers({
   resultCount() {
     return Plugins.findAll().count();
   },
+
+  singleResult() {
+    return Plugins.findAll().count() === 1;
+  },
 });
