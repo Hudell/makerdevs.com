@@ -111,8 +111,6 @@ class PluginsModel extends Base {
       },
     };
 
-
-
     this.update(query, data);
   }
 

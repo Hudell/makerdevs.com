@@ -25,7 +25,7 @@
 // import '../imports/ui/body';
 
 import './startup';
-import '../lib/router';
+import '../lib/routes';
 
 import './layout/body';
 import '../models/client/LatestPlugins';
