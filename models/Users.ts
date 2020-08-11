@@ -11,6 +11,27 @@ class Users extends Base {
   public addUser(record: User): string {
     return this.insert(record);
   }
+
+  public setName(userId: string, name: string): void {
+    this.update({
+      _id: userId,
+    }, {
+      $set: {
+        name,
+      },
+    });
+  }
+
+  public findOneByEmail(email: string): User | undefined {
+    const query = {
+      'emails.address': email,
+    };
+
+    const user = this.findOne(query);
+    if (user) {
+      return user as User;
+    }
+  }
 }
 
 export default new Users();

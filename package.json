@@ -15,6 +15,9 @@
     "gravatar": "^1.8.1",
     "jquery": "^3.4.1",
     "meteor-node-stubs": "^1.0.0",
+    "meteor-sha256": "^1.0.1",
+    "node-php-password": "^0.1.2",
+    "save": "^2.4.0",
     "toastr": "^2.1.4"
   },
   "devDependencies": {

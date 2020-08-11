@@ -1,6 +1,10 @@
 <template name="searchResults">
 
-  <h4>Showing {{resultCount}} results</h4>
+  {{#if singleResult}}
+    <h4>1 Result</h4>
+  {{else}}
+    <h4>{{resultCount}} results</h4>
+  {{/if}}
 
   <ul>
   {{#each plugin in plugins}}
