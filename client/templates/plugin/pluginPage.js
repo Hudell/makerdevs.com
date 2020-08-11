@@ -13,6 +13,23 @@ const getPlugin = () => {
   return Template.instance().plugin.get();
 };
 
+const refreshData = (instance) => {
+  const pluginId = FlowRouter.getParam('pluginId');
+
+  Meteor.call('plugin/details', pluginId, (err, data) => {
+    instance.isLoaded.set(true);
+
+    if (err) {
+      toastr.error("Failed to load plugin data.");
+      console.log(err);
+      return;
+    }
+
+    Session.set('pageTitle', `Plugin Details - ${ data.name }`);
+    instance.plugin.set(data);
+  });  
+};
+
 const getLatestFiles = () => {
   //Return the most recent file of each platform
   const plugin = getPlugin();
@@ -40,6 +57,12 @@ const getLatestFiles = () => {
   }
 
   return files;
+};
+
+const checkReaction = (reactionId) => {
+  const plugin = getPlugin();
+
+  return plugin?.reactions && plugin.reactions[reactionId]?.includes(Meteor.userId());
 };
 
 Template.pluginPage.helpers({
@@ -76,6 +99,47 @@ Template.pluginPage.helpers({
   avatarUrl(email) {
     return gravatar.url(email, {}, true);
   },
+  liked() {
+    return checkReaction('like');
+  },
+  disliked() {
+    return checkReaction('dislike');
+  },
+  canReview() {
+    const userId = Meteor.userId();
+    if (!userId) {
+      return false;
+    }
+
+    const plugin = getPlugin();
+    if (userId == plugin.userId) {
+      return false;
+    }
+
+    return true;
+  },
+
+  canEdit() {
+    const userId = Meteor.userId();
+    if (!userId) {
+      return false;
+    }
+
+    const plugin = getPlugin();
+    if (userId == plugin.userId) {
+      return true;
+    }
+
+    return false;
+  },
+  likeCount() {
+    const plugin = getPlugin();
+    return plugin.reactions?.like?.length;
+  },
+  singleLike() {
+    const plugin = getPlugin();
+    return plugin.reactions?.like?.length === 1;
+  }
 });
 
 Template.pluginPage.events({
@@ -83,6 +147,21 @@ Template.pluginPage.events({
     const pluginId = FlowRouter.getParam('pluginId');
     Meteor.call('plugin/click', pluginId);
   },
+  'click .like-btn'(e, instance) {
+    const pluginId = FlowRouter.getParam('pluginId');
+    Meteor.call('plugin/like', pluginId, () => {
+      refreshData(instance);
+    });
+  },
+  'click .edit-btn'(e, instance) {
+    const pluginId = FlowRouter.getParam('pluginId');
+    FlowRouter.go(`edit/${ pluginId }`);
+
+  },
+  'click .review-btn'(e, instance) {
+    const pluginId = FlowRouter.getParam('pluginId');
+    FlowRouter.go(`review/${ pluginId }`);
+  }
 });
 
 Template.pluginPage.onCreated(function() {
@@ -91,16 +170,5 @@ Template.pluginPage.onCreated(function() {
   this.plugin = new ReactiveVar(false);
   this.isLoaded = new ReactiveVar(false);
 
-  Meteor.call('plugin/details', pluginId, (err, data) => {
-    this.isLoaded.set(true);
-
-    if (err) {
-      toastr.error("Failed to load plugin data.");
-      console.log(err);
-      return;
-    }
-
-    Session.set('pageTitle', `Plugin Details - ${ data.name }`);
-    this.plugin.set(data);
-  });
+  refreshData(this);
 });

@@ -2,7 +2,7 @@ import { BlazeLayout } from 'meteor/kadira:blaze-layout';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from 'meteor/session';
 
-const useTemplate = (templateName, pageTitle, breadcrumbs = []) => {
+const useTemplate = (templateName: string, pageTitle: string, breadcrumbs: Array<String> = []) => {
   Session.set('pageTitle', pageTitle);
   Session.set('breadcrumbs', breadcrumbs);
   return BlazeLayout.render('contentWrapper', {
@@ -66,7 +66,7 @@ FlowRouter.route('/latest', {
 });
 
 FlowRouter.route('/profile/:username', {
-  async action(params) {
+  async action() {
     await import('../client/templates/profile/profile');
 
     useTemplate('profile', 'User Profile');
@@ -95,6 +95,11 @@ FlowRouter.route('/mz/master-list', {
 
 FlowRouter.route('/plugin/submit', {
   async action() {
+    if (!Meteor.userId()) {
+      FlowRouter.go('/home');
+      return;
+    }
+
     await import('../client/templates/plugin/submitPlugin');
     useTemplate('submitPlugin', 'Submit Plugin');
   }
@@ -104,6 +109,24 @@ FlowRouter.route('/plugin/:pluginId', {
   async action() {
     await import('../client/templates/plugin/pluginPage');
     useTemplate('pluginPage', 'Plugin');
+  }
+});
+
+FlowRouter.route('/platform/:platformCode', {
+  async action() {
+    
+  }
+});
+
+FlowRouter.route('/edit/:pluginId', {
+  async action() {
+    
+  }
+});
+
+FlowRouter.route('/review/:pluginId', {
+  async action() {
+    
   }
 });
 

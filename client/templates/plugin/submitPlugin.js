@@ -1,6 +1,12 @@
 import './submitPlugin.html';
+import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
 
+const updateHelp = _.debounce((instance) => {
+  const help = $('#pluginHelp').val();
+
+  instance.helpPreview.set(help);
+}, 300);
 
 Template.submitPlugin.helpers({
   fileHeader() {
@@ -9,6 +15,9 @@ Template.submitPlugin.helpers({
   isFileLoading() {
     const data = Template.instance().fileData.get();
     return !data;
+  },
+  helpPreview() {
+    return Template.instance().helpPreview.get();
   },
 });
 
@@ -42,6 +51,10 @@ Template.submitPlugin.events({
     };
 
     reader.readAsBinaryString(file);
+  },
+
+  'input #pluginHelp'(e, instance) {
+    updateHelp(instance);
   },
 
   'click #removeFile'(e, instance) {
@@ -150,4 +163,5 @@ Template.submitPlugin.events({
 Template.submitPlugin.onCreated(function() {
   this.fileHeader = new ReactiveVar(null);
   this.fileData = new ReactiveVar(null);
+  this.helpPreview = new ReactiveVar('');
 });

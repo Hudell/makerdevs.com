@@ -138,6 +138,7 @@ Meteor.methods({
     };
 
     newPluginData.versions.push({
+      _id: Random.id(),
       name: versionName,
       externalLink,
       fileId,
@@ -153,4 +154,34 @@ Meteor.methods({
     const address = this.connection?.clientAddress;
     Clicks.insertClick(pluginId, Meteor.userId(), address);
   },
+
+  'plugin/like'(pluginId: string) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    if (Plugins.userLikedPlugin(userId, pluginId)) {
+      Plugins.dislike(pluginId, userId);
+    } else {
+      Plugins.like(pluginId, userId);
+    }
+
+  },
 });
+
+DDPRateLimiter.addRule({
+  type: 'method',
+  name: 'plugin/click',
+}, 5, 1000);
+
+DDPRateLimiter.addRule({
+  type: 'method',
+  name: 'plugin/like',
+}, 5, 1000);
+
+
+DDPRateLimiter.addRule({
+  type: 'method',
+  name: 'plugin/submit',
+}, 3, 10000);

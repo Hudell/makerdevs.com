@@ -69,6 +69,7 @@ Meteor.startup(() => {
       }
 
       const versionData: PluginVersion = {
+        _id: Random.id(),
         name: version.name,
         importedId: version.id,
         downloadLink: version.download_link ? `https://mvplugins.com/${ version.download_link}` : undefined,
@@ -93,25 +94,11 @@ Meteor.startup(() => {
           _updatedAt: new Date(`${ comment.updated_at }Z`),
         };
 
-
-        let reactionName;
-
-        switch(commentData.rating) {
-          case 1:
-          case 2:
-            reactionName = 'thumbsdown';
-            break;
-          case 4:
-          case 5:
-            reactionName = 'thumbsup';
-            break;
-        }
-
-        if (reactionName) {
-          if (!pluginData.reactions[reactionName]) {
-            pluginData.reactions[reactionName] = [];
+        if (commentData.rating >= 3) {
+          if (!pluginData.reactions.like) {
+            pluginData.reactions.like = [];
           }
-          pluginData.reactions[reactionName].push(commentData.userId);
+          pluginData.reactions.like.push(commentData.userId);
         }
 
         versionData.reviews.push(commentData);

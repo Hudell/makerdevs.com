@@ -39,6 +39,43 @@ class PluginsModel extends Base {
 
     return this.find(query, options);
   }
+
+  public userLikedPlugin(userId: string, pluginId: string): boolean {
+    const query = {
+      _id: pluginId,
+      'reactions.like': userId,
+    };
+
+    return this.find(query, {}).count() > 0;
+  }
+
+  public like(pluginId: string, userId: string): void {
+    const query = {
+      _id: pluginId,
+    };
+
+    const data = {
+      $addToSet: {
+        'reactions.like': userId,
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public dislike(pluginId: string, userId: string): void {
+    const query = {
+      _id: pluginId,
+    };
+
+    const data = {
+      $pull: {
+        'reactions.like': userId,
+      },
+    };
+
+    this.update(query, data);
+  }
 }
 
 export default new PluginsModel();

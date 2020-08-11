@@ -14,11 +14,11 @@
               <div class="card-body">
                 <div class="form-group">
                   <label for="pluginName">Plugin Name</label>
-                  <input type="text" class="form-control" id="pluginName" placeholder="Enter plugin name">
+                  <input type="text" class="form-control" id="pluginName" placeholder="Enter plugin name" maxlength="60">
                 </div>
                 <div class="form-group">
                   <label for="pluginDescription">Summary</label>
-                  <input type="text" class="form-control" id="pluginDescription" placeholder="Enter a short description">
+                  <input type="text" class="form-control" id="pluginDescription" placeholder="Enter a short description" maxlength="255">
                 </div>
 
                 <div class="form-group">
@@ -48,9 +48,9 @@
               <div class="card-body">
                 <div class="form-group">
                   <label for="pluginVersion">Version</label>
-                  <input type="text" class="form-control" id="pluginVersion" placeholder="Enter a version name">
+                  <input type="text" class="form-control" id="pluginVersion" placeholder="Enter a version name" maxlength="40">
                   <small>
-                    <a href="http://semver.org/" target="_blank">We recommend using semantic versioning for plugin version names</a>
+                    <a href="http://semver.org/" rel="noopener noreferrer" target="_blank">We recommend using semantic versioning for plugin version names</a>
                   </small>
                 </div>
                 <div class="form-group">
@@ -129,6 +129,8 @@
                 <div class="form-group">
                   <label>Instructions</label>
                   <textarea class="form-control" rows="10" placeholder="Enter plugin instructions here" id="pluginHelp"></textarea>
+
+                  <p class="text-muted">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" rel="noreferrer noopener" target="_blank">Markdown</a> to format your instructions.</p>
                 </div>
               </div>
             </div>
@@ -138,7 +140,7 @@
                 <!-- textarea -->
                 <div class="form-group">
                   <label>Instructions Preview</label>
-                  
+                  {{#markdown}}{{helpPreview}}{{/markdown}}
                 </div>
               </div>
             </div>
