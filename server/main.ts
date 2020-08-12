@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import './routes';
 
 import './startup';
@@ -17,4 +19,3 @@ import './publications/services';
 import './methods/plugin';
 import './methods/users';
 import './methods/services';
-
