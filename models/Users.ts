@@ -32,6 +32,14 @@ class Users extends Base {
       return user as User;
     }
   }
+
+  public countAdmins(): number {
+    const query = {
+      admin: true,
+    };
+
+    return this.find(query).count();
+  }
 }
 
 export default new Users();

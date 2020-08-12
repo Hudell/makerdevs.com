@@ -1,0 +1,105 @@
+<template name="loginServices">
+  {{#if isLoaded}}
+    {{#each service in services}}
+      <div class="col-md-6">
+        <form role="form">
+          <div class="card card-primary">
+            <div class="card-header">
+              <h3 class="card-title">{{service.name}}</h3>
+            </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="id_{{service.name}}">Service ID</label>
+                <input type="text" class="form-control" name="id" disabled value="{{service._id}}" id="id_{{service.name}}">
+              </div>
+              <div class="form-group">
+                <label for="name_{{service.name}}">Service Name</label>
+                <input type="text" class="form-control" name="serviceName" disabled value="{{service.name}}" id="name_{{service.name}}">
+              </div>
+              <div class="form-group">
+                <label for="clientId_{{service.name}}">Client ID</label>
+                <input type="text" class="form-control" name="clientId" value="{{service.clientId}}" id="clientId_{{service.name}}">
+              </div>
+              <div class="form-group">
+                <label for="secret_{{service.name}}">Secret</label>
+                <input type="text" class="form-control" name="secret" value="{{service.secret}}" id="secret_{{service.name}}">
+              </div>
+              <div class="form-group">
+                <label for="loginStyle_{{service.name}}">Login Style</label>
+                <input type="text" class="form-control" name="loginStyle" value="{{service.loginStyle}}" id="loginStyle_{{service.name}}">
+              </div>
+              <div class="form-group">
+                <label for="buttonIcon_{{service.name}}">Button Icon</label>
+                <input type="text" class="form-control" name="buttonIcon" value="{{service.buttonIcon}}" id="buttonIcon_{{service.name}}">
+              </div>
+              <div class="form-group">
+                <label for="buttonText_{{service.name}}">Button Text</label>
+                <input type="text" class="form-control" name="buttonText" value="{{service.buttonText}}" id="buttonText_{{service.name}}">
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="enabled" checked="{{service.enabled}}" id="enabled_{{service.name}}">
+                <label class="form-check-label" for="enabled_{{service.name}}">Enabled</label>
+              </div>
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary submit">Submit</button>
+                <button type="button" class="btn btn-secondary btn-delete" data-id={{service._id}}>Delete</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    {{/each}}
+
+    <div class="col-md-6">
+      <div class="card card-warning">
+        <div class="card-header">
+          <h3 class="card-title">Add New Service</h3>
+        </div>
+        <div class="card-body">
+          <form role="form">
+            <div class="form-group">
+              <label for="serviceName">Service Name</label>
+              <input type="text" class="form-control" name="serviceName">
+            </div>
+            <div class="form-group">
+              <label for="clientId">Client ID</label>
+              <input type="text" class="form-control" name="clientId">
+            </div>
+            <div class="form-group">
+              <label for="secret">Secret</label>
+              <input type="text" class="form-control" name="secret">
+            </div>
+            <div class="form-group">
+              <label for="loginStyle">Login Style</label>
+              <input type="text" class="form-control" name="loginStyle">
+            </div>
+            <div class="form-group">
+              <label for="buttonIcon">Button Icon</label>
+              <input type="text" class="form-control" name="buttonIcon">
+            </div>
+            <div class="form-group">
+              <label for="buttonText">Button Text</label>
+              <input type="text" class="form-control" name="buttonText">
+            </div>
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" name="enabled" id="newEnabled">
+              <label class="form-check-label" for="newEnabled">Enabled</label>
+            </div>
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary submit">Submit</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}
+
+</template>
