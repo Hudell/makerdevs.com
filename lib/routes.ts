@@ -28,6 +28,8 @@ FlowRouter.route('/login', {
       return;
     }
 
+    Meteor.SubsCache.subscribe('services');
+
     await import('../client/templates/login/login');
     useTemplate('login', 'Login');
   }
@@ -40,6 +42,8 @@ FlowRouter.route('/register', {
       FlowRouter.go('/home');
       return;
     }
+
+    Meteor.SubsCache.subscribe('services');
 
     await import('../client/templates/user/register');
     useTemplate('register', 'User Registration');
@@ -187,6 +191,32 @@ FlowRouter.route('/mvplugin/:importedId', {
   async action() {
     await import('../client/templates/plugin/pluginPage');
     useTemplate('pluginPage', 'Plugin');
+  }
+});
+
+FlowRouter.route('/admin/services', {
+  async action() {
+    const user = Meteor.user();
+    if (!user || !user.admin) {
+      FlowRouter.go('/home');
+      return;
+    }
+
+    await import('../client/templates/admin/loginServices');
+    useTemplate('loginServices', 'Login Services');
+  }
+});
+
+FlowRouter.route('/admin/import', {
+  async action() {
+    const user = Meteor.user();
+    if (!user || !user.admin) {
+      FlowRouter.go('/home');
+      return;
+    }
+
+    await import('../client/templates/admin/loginServices');
+    useTemplate('loginServices', 'Login Services');
   }
 });
 

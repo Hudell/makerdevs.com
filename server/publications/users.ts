@@ -1,6 +1,7 @@
 const fields = {
   name: 1,
   emails: 1,
+  admin: 1,
 };
 
 Meteor.publish("userData", function () {

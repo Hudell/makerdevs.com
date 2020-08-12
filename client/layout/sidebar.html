@@ -10,19 +10,19 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-      {{#if currentUser}}
-        <!-- Sidebar user panel (optional) -->
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <div class="image">
-            <img src="{{avatarUrl}}" class="img-circle elevation-2" alt="User Image">
-          </div>
-          <div class="info">
-            <a href="/me" class="d-block">{{currentUser.name}}</a>
-          </div>
-        </div>
 
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+          {{#if currentUser}}
+            <!-- Sidebar user panel (optional) -->
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+              <div class="image">
+                <img src="{{avatarUrl}}" class="img-circle elevation-2" alt="User Image">
+              </div>
+              <div class="info">
+                <a href="/me" class="d-block">{{currentUser.name}}</a>
+              </div>
+            </div>
+
             <li class="nav-item">
               <a href="/plugin/submit" class="nav-link {{isActivePath class='active' path='/plugin/submit'}}">
                 <i class="nav-icon fas fa-th"></i>
@@ -31,14 +31,36 @@
                 </p>
               </a>
             </li>
-          </ul>
-        </div>
 
-      {{/if}}
+            {{#if currentUser.admin}}
+            <div  class="user-panel">
+              <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-tree"></i>
+                  <p>
+                    Admin
+                    <i class="fas fa-angle-left right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="/admin/services" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Login Services</p>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a href="/admin/import" class="nav-link">
+                      <i class="far fa-circle nav-icon"></i>
+                      <p>Import Data</p>
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </div>
+            {{/if}}
+          {{/if}}
 
-      <!-- Sidebar Menu -->
-      <nav class="mt-2">
-        <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <li class="nav-item">
             <a href="/mz/master-list" class="nav-link {{isActivePath class='active' path='/mz/master-list'}}">
               <i class="nav-icon fas fa-th"></i>
@@ -47,15 +69,6 @@
               </p>
             </a>
           </li>
-<!--           <li class="nav-item">
-            <a href="/mz/videos" class="nav-link {{isActivePath class='active' path='/mz/videos'}}">
-              <i class="nav-icon fas fa-th"></i>
-              <p>
-                MZ Videos
-              </p>
-            </a>
-          </li>
- -->
           <li class="nav-item">
             <a href="/mv/master-list" class="nav-link {{isActivePath class='active' path='/mv/master-list'}}">
               <i class="nav-icon fas fa-th"></i>
@@ -64,8 +77,7 @@
               </p>
             </a>
           </li>
-
-          <li class="nav-item">
+<!--           <li class="nav-item">
             <a href="/latest" class="nav-link {{isActivePath class='active' path='/latest'}}">
               <i class="nav-icon fas fa-th"></i>
               <p>
@@ -73,13 +85,10 @@
                 <span class="right badge badge-danger">New</span>
               </p>
             </a>
-          </li>
-
-
+          </li> -->
         </ul>
-      </nav>
-      <!-- /.sidebar-menu -->
-    </div>
-    <!-- /.sidebar -->
+      </div>
+
+
   </aside>
 </template>

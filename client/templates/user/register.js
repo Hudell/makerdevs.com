@@ -2,7 +2,17 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import toastr from 'toastr';
 import SHA256 from 'meteor-sha256';
 
+import Services from '../../../models/Services';
 import './register.html';
+
+Template.register.helpers({
+  services() {
+    return Services.findAll();
+  },
+  hasAnyService() {
+    return Services.findAll().count() > 0;
+  },
+});
 
 Template.register.events({
   'submit form'(e, instance) {

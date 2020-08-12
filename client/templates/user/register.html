@@ -48,13 +48,18 @@
           </div>
         </form>
 
-        <div class="social-auth-links text-center">
-          <p>- OR -</p>
-          <a href="#" class="btn btn-block btn-info btn-github">
-            <i class="fab fa-github mr-2"></i>
-            Sign up using GitHub
-          </a>
+        <div class="social-auth-links text-center mb-3">
+          {{#if hasAnyService}}
+            <p>- OR -</p>
+
+            {{#each service in services}}
+            <a href="" class="btn btn-block btn-info btn-service" data-id="{{service._id}}">
+              <i class="fab fa-{{service.buttonIcon}} mr-2"></i> {{service.buttonText}}
+            </a>
+            {{/each}}
+          {{/if}}
         </div>
+
 
         <a href="/login" class="text-center">I already have an account</a>
       </div>

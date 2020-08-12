@@ -35,7 +35,7 @@ const refreshData = (instance) => {
     Session.set('pageTitle', `Edit Details - ${ data.name }`);
     instance.plugin.set(data);
     instance.helpPreview.set(data.help);
-  });  
+  });
 };
 
 Template.editPlugin.helpers({

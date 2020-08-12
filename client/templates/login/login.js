@@ -2,7 +2,17 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import toastr from 'toastr';
 import SHA256 from 'meteor-sha256';
 
+import Services from '../../../models/Services';
 import './login.html';
+
+Template.login.helpers({
+  services() {
+    return Services.findAll();
+  },
+  hasAnyService() {
+    return Services.findAll().count() > 0;
+  },
+});
 
 Template.login.events({
   'submit form'(e, instance) {
@@ -51,10 +61,29 @@ Template.login.events({
     })
   },
 
-  'click .btn-github'(e, instance) {
+  'click .btn-service'(e, instance) {
     e.preventDefault();
 
-    Meteor.loginWithGithub((err) => {
+    if (!e.target?.dataset?.id) {
+      toastr.error("Internal Error");
+      return;
+    }
+
+    const service = Services.findOneById(e.target.dataset.id);
+    if (!service) {
+      toastr.error("Internal Error");
+      return;
+    }
+
+    const serviceName = service.name[0].toUpperCase() + service.name.substr(1);
+    const methodName = `loginWith${ serviceName }`;
+
+    if (!Meteor[methodName]) {
+      toastr.error("Invalid Login Service");
+      return;
+    }
+
+    Meteor[methodName]((err) => {
       if (err) {
         console.log(err);
         toastr.error("Login failed");
