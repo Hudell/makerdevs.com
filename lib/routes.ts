@@ -50,15 +50,15 @@ FlowRouter.route('/register', {
   }
 });
 
-FlowRouter.route('/recover-password', {
+FlowRouter.route('/password-reset', {
   async action() {
     if (Meteor.userId()) {
       toastr.error("You are logged in.");
       FlowRouter.go('/home');
       return;
     }
-    await import('../client/templates/accounts/recoverPassword');
-    useTemplate('recoverPassword', 'Password Recovery');
+    await import('../client/templates/user/resetPassword');
+    useTemplate('resetPassword', 'Reset my password');
   }
 });
 
