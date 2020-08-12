@@ -1,5 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { Blaze } from "meteor/blaze";
+import { Template } from 'meteor/templating';
 import { Email } from 'meteor/email';
 import { check } from 'meteor/check';
 
@@ -7,6 +8,8 @@ import PHPPassword from 'node-php-password';
 
 import Users from '../../models/Users';
 import { NO_REPLY_EMAIL } from '../constants';
+
+import passwordRecovery from "../mailing/passwordRecovery";
 
 Meteor.methods({
   'user/register'(name, email, password) {
@@ -57,14 +60,10 @@ Meteor.methods({
 
     Accounts.setPassword(user._id as string, password);
   },
-  'users/resetPassword'(email) {
-    const user = Users.findOneByEmail(email);
-    this.unblock();
-    if (!user) {
-      const html = Blaze.toHTMLWithData(Template.passwordRecoveryNotFound, { email });
-      Email.send({ from: NO_REPLY_EMAIL, to: email, html });
-      return;
-    }
-    Accounts.sendResetPasswordEmail(user.id, email);
+  'users/sendFakePasswordRecovery'(to) {
+    const html = `
+      <p>You sent a password recovery at makerdevs, however you don't own an account.</p>
+    `;
+    Email.send({ to, html, from: NO_REPLY_EMAIL });
   }
 });
