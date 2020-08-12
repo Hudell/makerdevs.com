@@ -62,6 +62,15 @@ FlowRouter.route('/password-reset', {
   }
 });
 
+FlowRouter.route('/reset-password/:token', {
+  async action(params : any) {
+    const { token } = params;
+    Session.set('resetPasswordToken', token);
+    await import('../client/templates/user/resetPasswordForm');
+    useTemplate('resetPasswordForm', 'Reset Account password');
+  }
+});
+
 FlowRouter.route('/logout', {
   async action() {
     Meteor.logout(function() {
