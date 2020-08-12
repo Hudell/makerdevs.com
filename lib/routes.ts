@@ -50,6 +50,18 @@ FlowRouter.route('/register', {
   }
 });
 
+FlowRouter.route('/recover-password', {
+  async action() {
+    if (Meteor.userId()) {
+      toastr.error("You are logged in.");
+      FlowRouter.go('/home');
+      return;
+    }
+    await import('../client/templates/accounts/recoverPassword');
+    useTemplate('recoverPassword', 'Password Recovery');
+  }
+});
+
 FlowRouter.route('/logout', {
   async action() {
     Meteor.logout(function() {
