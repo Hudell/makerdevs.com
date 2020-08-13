@@ -1,6 +1,6 @@
 import { Base } from './Base';
 import { MongoDocument } from '../lib/types/MongoDocument';
-import { Plugin, ModifiedPlugin, SubmittedReview } from '../lib/types/Plugin';
+import { Plugin, ModifiedPlugin, SubmittedReview, PluginVersion } from '../lib/types/Plugin';
 
 class PluginsModel extends Base {
   constructor() {
@@ -198,6 +198,37 @@ class PluginsModel extends Base {
     };
 
     return this.find(query, options);
+  }
+
+  public addVersion(pluginId: string, version: PluginVersion): void {
+    const query = {
+      _id: pluginId,
+    };
+
+    const data = {
+      $addToSet: {
+        versions: version
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public removeVersion(pluginId: string, versionId: string): void {
+    const query = {
+      _id: pluginId,
+      'versions._id': versionId,
+    };
+
+    const data = {
+      $pull: {
+        'versions': {
+          '_id': versionId,
+        },
+      },
+    };
+
+    this.update(query, data);
   }
 }
 

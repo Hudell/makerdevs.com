@@ -22,3 +22,15 @@ Template.registerHelper("gte", function (v1: any, v2: any) {
 Template.registerHelper("isUser", function (id: string) {
   return id === Meteor.userId();
 });
+
+Template.registerHelper("date", function (date: Date) {
+  return date.toLocaleDateString();
+});
+
+Template.registerHelper("dateTime", function (date: Date) {
+  return `${ date.toLocaleDateString()} ${ date.toLocaleTimeString() }`;
+});
+
+Template.registerHelper("link", function (url: string) {
+  return (url && url.startsWith('http')) ? url : `//${ url}`;
+});
