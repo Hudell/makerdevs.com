@@ -5,7 +5,9 @@
         <h5 class="m-0 flex-grow">{{displayName}}</h5>
         <div class="plugin-card-icons">
           {{#each icon in icons}}
-            <img class="plugin-card-icon" title="{{icon.name}}" alt="{{icon.name}}" src="{{icon.src}}" />
+            <a href="/{{icon.code}}/master-list">
+              <img class="plugin-card-icon" title="{{icon.name}}" alt="{{icon.name}}" src="{{icon.src}}" />
+            </a>
           {{/each}}
         </div>
       </div>

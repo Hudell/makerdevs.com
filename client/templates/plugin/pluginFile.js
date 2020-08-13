@@ -3,6 +3,7 @@ import toastr from 'toastr';
 
 import { Modal } from '../../utils/modal';
 import './pluginFile.html';
+import { Platforms } from '../../../data/Platforms';
 
 const getPlugin = () => {
   return Template.instance().data.plugin;
@@ -13,15 +14,18 @@ Template.pluginFile.helpers({
     return Template.instance().data.file;
   },
   platformName(code) {
-    const plugin = getPlugin();
-
-    for (const platform of plugin.platforms) {
-      if (platform._id == code) {
-        return platform.name;
-      }
+    if (code in Platforms) {
+      return Platforms[code].name;
     }
 
     return code.toUpperCase();
+  },
+  platformIcon(code) {
+    if (code in Platforms) {
+      return Platforms[code].icon;
+    }
+
+    return `/icons/platforms/${code}.png`;
   },
   canDelete() {
     const plugin = getPlugin();
