@@ -198,6 +198,13 @@ FlowRouter.route('/plugin/edit/:pluginId', {
   }
 });
 
+FlowRouter.route('/plugin/newFile/:pluginId', {
+  async action() {
+    await import('../client/templates/plugin/sendFile');
+    useTemplate('sendFile', 'Send New File');
+  }
+});
+
 FlowRouter.route('/plugin/review/:pluginId', {
   async action() {
     await import('../client/templates/plugin/reviewPlugin');

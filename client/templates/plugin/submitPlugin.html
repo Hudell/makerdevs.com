@@ -1,131 +1,116 @@
 <template name="submitPlugin">
   <div class="row">
-    <!-- left column -->
     <div class="col-md-6">
-      <!-- general form elements -->
       <form role="form">
-
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">General Information</h3>
-            </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-              <div class="card-body">
-                <div class="form-group">
-                  <label for="pluginName">Plugin Name</label>
-                  <input type="text" class="form-control" id="pluginName" placeholder="Enter plugin name" maxlength="60">
-                </div>
-                <div class="form-group">
-                  <label for="pluginDescription">Summary</label>
-                  <input type="text" class="form-control" id="pluginDescription" placeholder="Enter a short description" maxlength="255">
-                </div>
-
-                <div class="form-group">
-                  <label>Plugin Visibility</label>
-
-                  <div class="custom-control custom-radio">
-                    <input class="custom-control-input" type="radio" id="pluginPublic" name="pluginVisibility">
-                    <label for="pluginPublic" class="custom-control-label">Published</label>
-                  </div>
-                  <div class="custom-control custom-radio">
-                    <input class="custom-control-input" type="radio" id="pluginDraft" name="pluginVisibility" checked>
-                    <label for="pluginDraft" class="custom-control-label">Draft</label>
-                  </div>
-                </div>
-
-              </div>
-              <!-- /.card-body -->
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">General Information</h3>
           </div>
-          <!-- /.card -->
 
-          <div class="card card-primary">
-            <div class="card-header">
-              <h3 class="card-title">Plugin File</h3>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="pluginName">Plugin Name</label>
+              <input type="text" class="form-control" id="pluginName" placeholder="Enter plugin name" maxlength="60">
             </div>
-            <!-- /.card-header -->
-            <!-- form start -->
-              <div class="card-body">
-                <div class="form-group">
-                  <label for="pluginVersion">Version</label>
-                  <input type="text" class="form-control" id="pluginVersion" placeholder="Enter a version name" maxlength="40">
-                  <small>
-                    <a href="http://semver.org/" rel="noopener noreferrer" target="_blank">We recommend using semantic versioning for plugin version names</a>
-                  </small>
-                </div>
-                <div class="form-group">
-                  <label for="pluginFile">File</label>
-                  <div class="input-group">
-                    <div class="custom-file">
-                      <input type="file" class="custom-file-input" id="pluginFile">
-                      <label class="custom-file-label" for="pluginFile">Choose file</label>
-                    </div>
+            <div class="form-group">
+              <label for="pluginDescription">Summary</label>
+              <input type="text" class="form-control" id="pluginDescription" placeholder="Enter a short description" maxlength="255">
+            </div>
+
+            <div class="form-group">
+              <label>Plugin Visibility</label>
+
+              <div class="custom-control custom-radio">
+                <input class="custom-control-input" type="radio" id="pluginPublic" name="pluginVisibility">
+                <label for="pluginPublic" class="custom-control-label">Published</label>
+              </div>
+              <div class="custom-control custom-radio">
+                <input class="custom-control-input" type="radio" id="pluginDraft" name="pluginVisibility" checked>
+                <label for="pluginDraft" class="custom-control-label">Draft</label>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">Plugin File</h3>
+          </div>
+            <div class="card-body">
+              <div class="form-group">
+                <label for="pluginVersion">Version</label>
+                <input type="text" class="form-control" id="pluginVersion" placeholder="Enter a version name" maxlength="40">
+                <small>
+                  <a href="http://semver.org/" rel="noopener noreferrer" target="_blank">We recommend using semantic versioning for plugin version names</a>
+                </small>
+              </div>
+              <div class="form-group">
+                <label for="pluginFile">File</label>
+                <div class="input-group">
+                  <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="pluginFile">
+                    <label class="custom-file-label" for="pluginFile">Choose file</label>
                   </div>
-                  <p class="text-muted">
-                    Allowed file types: zip, rar, 7z, js.<br/>
-                    Maximum file size:  1MB.
-                  </p>
+                </div>
+                <p class="text-muted">
+                  Allowed file types: zip, rar, 7z, js.<br/>
+                  Maximum file size:  1MB.
+                </p>
 
-                  {{#if fileHeader}}
-                    <div class="card card-success">
-                      <div class="card-header">
-                        <h3 class="card-title">{{fileHeader.name}}</h3>
+                {{#if fileHeader}}
+                  <div class="card card-success">
+                    <div class="card-header">
+                      <h3 class="card-title">{{fileHeader.name}}</h3>
 
-                        <div class="card-tools">
-                          <button type="button" class="btn btn-tool" data-card-widget="remove" id="removeFile"><i class="fas fa-times"></i>
-                          </button>
-                        </div>
+                      <div class="card-tools">
+                        <button type="button" class="btn btn-tool" data-card-widget="remove" id="removeFile"><i class="fas fa-times"></i>
+                        </button>
                       </div>
-                      {{#if isFileLoading}}
-                        <div class="overlay">
-                          <i class="fas fa-1x fa-sync-alt fa-spin"></i>
-                        </div>
-                      {{/if}}
                     </div>
-                  {{/if}}
-                </div>
-
-                <div class="form-group">
-                  <label for="pluginLink">External Link</label>
-                  <input type="text" class="form-control" id="pluginLink" placeholder="Enter a link to a plugin file">
-                </div>
-
-                <div class="form-group">
-                  <label>Compatible Platforms</label>
-
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="platform_mv">
-                    <label class="form-check-label" for="platform_mv">RPG Maker MV</label>
+                    {{#if isFileLoading}}
+                      <div class="overlay">
+                        <i class="fas fa-1x fa-sync-alt fa-spin"></i>
+                      </div>
+                    {{/if}}
                   </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="checkbox" id="platform_mz">
-                    <label class="form-check-label" for="platform_mz">RPG Maker MZ</label>
-                  </div>
+                {{/if}}
+              </div>
+
+              <div class="form-group">
+                <label for="pluginLink">External Link</label>
+                <input type="text" class="form-control" id="pluginLink" placeholder="Enter a link to a plugin file">
+              </div>
+
+              <div class="form-group">
+                <label>Compatible Platforms</label>
+
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="platform_mv">
+                  <label class="form-check-label" for="platform_mv">RPG Maker MV</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" id="platform_mz">
+                  <label class="form-check-label" for="platform_mz">RPG Maker MZ</label>
                 </div>
               </div>
-              <!-- /.card-body -->
+            </div>
 
-              <div class="card-footer">
-                <button type="submit" class="btn btn-primary submit">Submit</button>
-              </div>
-          </div>
-          <!-- /.card -->
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary submit">Submit</button>
+            </div>
+        </div>
       </form>
     </div>
-    <!--/.col (left) -->
-    <!-- right column -->
     <div class="col-md-6">
-      <!-- general form elements disabled -->
       <div class="card card-warning">
         <div class="card-header">
           <h3 class="card-title">Instructions</h3>
         </div>
-        <!-- /.card-header -->
         <div class="card-body">
           <form role="form">
             <div class="row">
               <div class="col-sm-12">
-                <!-- textarea -->
                 <div class="form-group">
                   <label>Instructions</label>
                   <textarea class="form-control" rows="10" placeholder="Enter plugin instructions here" id="pluginHelp"></textarea>
@@ -137,19 +122,15 @@
 
             <div class="row">
               <div class="col-sm-12">
-                <!-- textarea -->
                 <div class="form-group">
                   <label>Instructions Preview</label>
                   {{#markdown}}{{helpPreview}}{{/markdown}}
                 </div>
               </div>
             </div>
-              
           </form>
         </div>
-        <!-- /.card-body -->
       </div>
     </div>
-    <!--/.col (right) -->
   </div>
 </template>

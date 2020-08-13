@@ -8,39 +8,15 @@ import gravatar from 'gravatar';
 
 import Plugins from '../../../models/Plugins';
 import { Modal } from '../../utils/modal';
+import './pluginFile';
 import './pluginPage.html';
 
 const getPlugin = () => {
   return Template.instance().plugin.get();
 };
 
-const refreshData = (instance) => {
-  const pluginId = FlowRouter.getParam('pluginId');
-
-  Meteor.call('plugin/details', pluginId, (err, data) => {
-    instance.isLoaded.set(true);
-
-    if (err) {
-      toastr.error("Failed to load plugin data.");
-      console.log(err);
-      return;
-    }
-
-    if (!data) {
-      instance.isInvalid.set(true);
-      Session.set('pageTitle', 'Invalid Plugin Id');
-      return;
-    }
-
-    Session.set('pageTitle', `Plugin Details - ${ data.name }`);
-    instance.plugin.set(data);
-  });
-};
-
-const getLatestFiles = () => {
+const fillLatestFiles = (plugin) => {
   //Return the most recent file of each platform
-  const plugin = getPlugin();
-
   const platforms = {};
   for (const version of plugin.versions) {
     for (const platform of version.platforms) {
@@ -63,8 +39,57 @@ const getLatestFiles = () => {
     files[files.length -1].largeColumn = true;
   }
 
-  return files;
+  plugin.latestFiles = files;
 };
+
+const fillOtherFiles = (plugin) => {
+  const files = [];
+  const latestFiles = plugin.latestFiles;
+
+  for (const version of plugin.versions) {
+    if (latestFiles.includes(version)) {
+      continue;
+    }
+
+    files.push(version);
+  }
+
+  // If the number of files is not even, then tell the last file to use a largeColumn
+  if (files.length && files.length % 2 === 1) {
+    files[files.length -1].largeColumn = true;
+  }
+
+  plugin.otherFiles = files.sort((file1, file2) => {
+    return file2._createdAt - file1._createdAt;
+  })
+};
+
+const refreshData = (instance) => {
+  const pluginId = FlowRouter.getParam('pluginId');
+
+  Meteor.call('plugin/details', pluginId, (err, data) => {
+    instance.isLoaded.set(true);
+
+    if (err) {
+      toastr.error("Failed to load plugin data.");
+      console.log(err);
+      return;
+    }
+
+    if (!data) {
+      instance.isInvalid.set(true);
+      Session.set('pageTitle', 'Invalid Plugin Id');
+      return;
+    }
+
+    Session.set('pageTitle', `Plugin Details - ${ data.name }`);
+    fillLatestFiles(data);
+    fillOtherFiles(data);
+
+    instance.plugin.set(data);
+  });
+};
+
 
 const checkReaction = (reactionId) => {
   const plugin = getPlugin();
@@ -82,8 +107,8 @@ Template.pluginPage.helpers({
   isValid() {
     return !Template.instance().isInvalid.get();
   },
-  latestFiles() {
-    return getLatestFiles();
+  hasOlderFiles() {
+    return getPlugin().otherFiles?.length > 0;
   },
   platformName(code) {
     const plugin = getPlugin();
@@ -158,7 +183,10 @@ Template.pluginPage.events({
   'click .edit-btn'(e, instance) {
     const pluginId = FlowRouter.getParam('pluginId');
     FlowRouter.go(`/plugin/edit/${ pluginId }`);
-
+  },
+  'click .new-file-btn'(e, instance) {
+    const pluginId = FlowRouter.getParam('pluginId');
+    FlowRouter.go(`/plugin/newFile/${ pluginId }`);
   },
   'click .review-btn'(e, instance) {
     const pluginId = FlowRouter.getParam('pluginId');
@@ -178,9 +206,8 @@ Template.pluginPage.events({
         toastr.success("Review deleted successfully.");
         refreshData(instance);
       });
-
-     });
-  }
+    });
+  },
 });
 
 Template.pluginPage.onCreated(function() {

@@ -1,14 +1,9 @@
-import './submitPlugin.html';
+import './sendFile.html';
+
 import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
 
-const updateHelp = _.debounce((instance) => {
-  const help = $('#pluginHelp').val();
-
-  instance.helpPreview.set(help);
-}, 300);
-
-Template.submitPlugin.helpers({
+Template.sendFile.helpers({
   fileHeader() {
     return Template.instance().fileHeader.get();
   },
@@ -16,12 +11,9 @@ Template.submitPlugin.helpers({
     const data = Template.instance().fileData.get();
     return !data;
   },
-  helpPreview() {
-    return Template.instance().helpPreview.get();
-  },
 });
 
-Template.submitPlugin.events({
+Template.sendFile.events({
   'change #pluginFile'(e, instance) {
     const file = e.currentTarget.files[0];
     if (!file) {
@@ -53,10 +45,6 @@ Template.submitPlugin.events({
     reader.readAsBinaryString(file);
   },
 
-  'input #pluginHelp'(e, instance) {
-    updateHelp(instance);
-  },
-
   'click #removeFile'(e, instance) {
     // Give the animation some time before changing the reactive vars
     setTimeout(() => {
@@ -66,28 +54,28 @@ Template.submitPlugin.events({
     }, 400);
   },
 
+  'click .cancel'(e, instance) {
+    e.preventDefault();
+    const pluginId = FlowRouter.getParam('pluginId');
+    FlowRouter.go(`/plugin/${ pluginId }`);
+  },
+
   'click .submit'(e, instance) {
     e.preventDefault();
 
+    const pluginId = FlowRouter.getParam('pluginId');
     const mv = $('#platform_mv').is(':checked');
     const mz = $('#platform_mz').is(':checked');
-
-    const name = $('#pluginName').val();
-    const description = $('#pluginDescription').val();
 
     const public = $('#pluginPublic').is(':checked');
     const versionName = $('#pluginVersion').val();
     const externalLink = $('#pluginLink').val() || undefined;
-    const help = $('#pluginHelp').val();
 
     const fileHeader = instance.fileHeader.get() || undefined;
     const fileData = instance.fileData.get() || undefined;
 
     const pluginData = {
       platforms: [],
-      name,
-      description,
-      public,
       versionName,
       externalLink,
       fileHeader: (fileHeader ? {
@@ -96,7 +84,6 @@ Template.submitPlugin.events({
         type: fileHeader.type,
       } : undefined),
       fileData,
-      help,
     };
 
     if (mv) {
@@ -107,19 +94,6 @@ Template.submitPlugin.events({
     }
 
     let valid = true;
-    if (!name) {
-      toastr.error("The name field is required.");
-      valid = false;
-    } else if (name.trim().length > 60) {
-      toastr.error("The plugin name is too large.");
-      valid = false;
-    }
-
-    if (description && description.trim().length > 255) {
-      toastr.error("The plugin summary is too large.");
-      valid = false;
-    }
-
     if (!versionName) {
       toastr.error("The version name is required.");
       valid = false;
@@ -142,26 +116,20 @@ Template.submitPlugin.events({
       return;
     }
 
-    Meteor.call('plugin/submit', pluginData, (err, result) => {
+    Meteor.call('plugin/submitFile', pluginId, pluginData, (err, result) => {
       if (err) {
         console.log(err);
-        toastr.error("Failed to save the plugin, review the data and try again.");
+        toastr.error("Failed to save the file, review the data and try again.");
         return;
       }
 
-      toastr.success("Plugin submmited successfully.");
-
-      if (result) {
-        FlowRouter.go(`/plugin/${ result }`);
-      } else {
-        FlowRouter.go('/home');
-      }
+      toastr.success("Plugin file submmited successfully.");
+      FlowRouter.go(`/plugin/${ pluginId }`);
     });
   },
 });
 
-Template.submitPlugin.onCreated(function() {
+Template.sendFile.onCreated(function() {
   this.fileHeader = new ReactiveVar(null);
   this.fileData = new ReactiveVar(null);
-  this.helpPreview = new ReactiveVar('');
 });

@@ -1,0 +1,53 @@
+<template name="pluginFile">
+  <div class="col-12 col-md-12 {{#if file.largeColumn}}col-lg-12{{else}}col-lg-6{{/if}} order-2 order-md-2">
+    <div class="card card-secondary">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-6">
+            <h3 class="mt-2 text-muted">
+              {{file.name}}
+            </h3>
+
+            <ul class="list-unstyled">
+              {{#each platformCode in file.platforms}}
+                <li>
+                  <a href="/platform/{{platformCode}}" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> {{platformName platformCode}}</a>
+                </li>
+              {{/each}}
+            </ul>
+            <span class="description">{{dateTime file._createdAt}}</span>
+          </div>
+
+          <div class="col-6">
+            <div class="text-right mt-2 mb-3">
+              {{#if file.externalLink}}
+                <a href="{{link file.externalLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-primary download-link">
+                  <i class="fa fa-link"></i> External Link
+              </a>
+              {{/if}}
+              {{#if file.fileId}}
+                <a href="/download/{{file.fileId}}" target="_blank" rel="noopener noreferrer" class="btn btn-success download-link">
+                  <i class="fa fa-download"></i> Download
+                </a>
+              {{/if}}
+              {{#if file.downloadLink}}
+                <a href="{{file.downloadLink}}" target="_blank" rel="noopener noreferrer" class="btn btn-success download-link">
+                  <i class="fa fa-download"></i> Download
+                </a>
+              {{/if}}
+              {{#if canDelete}}
+                <a href="/file/delete/{{file._id}}" class="btn btn-danger delete-file-btn" data-id="{{file._id}}">
+                  <i class="fa fa-times"></i> Delete
+                </a>
+              {{else}}
+                <!-- <a href="/report/{{file._id}}" class="btn btn-warning">
+                  <i class="fa fa-times"></i> Report
+                </a> -->
+              {{/if}}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

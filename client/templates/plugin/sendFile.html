@@ -1,0 +1,72 @@
+<template name="sendFile">
+  <form role="form">
+    <div class="card card-primary">
+      <div class="card-header">
+        <h3 class="card-title">Plugin File</h3>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label for="pluginVersion">Version</label>
+          <input type="text" class="form-control" id="pluginVersion" placeholder="Enter a version name" maxlength="40">
+          <small>
+            <a href="http://semver.org/" rel="noopener noreferrer" target="_blank">We recommend using semantic versioning for plugin version names</a>
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="pluginFile">File</label>
+          <div class="input-group">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" id="pluginFile">
+              <label class="custom-file-label" for="pluginFile">Choose file</label>
+            </div>
+          </div>
+          <p class="text-muted">
+            Allowed file types: zip, rar, 7z, js.<br/>
+            Maximum file size:  1MB.
+          </p>
+
+          {{#if fileHeader}}
+            <div class="card card-success">
+              <div class="card-header">
+                <h3 class="card-title">{{fileHeader.name}}</h3>
+
+                <div class="card-tools">
+                  <button type="button" class="btn btn-tool" data-card-widget="remove" id="removeFile"><i class="fas fa-times"></i>
+                  </button>
+                </div>
+              </div>
+              {{#if isFileLoading}}
+                <div class="overlay">
+                  <i class="fas fa-1x fa-sync-alt fa-spin"></i>
+                </div>
+              {{/if}}
+            </div>
+          {{/if}}
+        </div>
+
+        <div class="form-group">
+          <label for="pluginLink">External Link</label>
+          <input type="text" class="form-control" id="pluginLink" placeholder="Enter a link to a plugin file">
+        </div>
+
+        <div class="form-group">
+          <label>Compatible Platforms</label>
+
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="platform_mv">
+            <label class="form-check-label" for="platform_mv">RPG Maker MV</label>
+          </div>
+          <div class="form-check">
+            <input class="form-check-input" type="checkbox" id="platform_mz">
+            <label class="form-check-label" for="platform_mz">RPG Maker MZ</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary submit">Submit</button>
+        <button type="button" class="btn btn-secondary cancel">Cancel</button>
+      </div>
+    </div>
+  </form>
+</template>

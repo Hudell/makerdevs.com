@@ -147,6 +147,93 @@ Meteor.methods({
     return Plugins.addPlugin(newPluginData);
   },
 
+  'plugin/submitFile'(pluginId, pluginData) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(pluginId, String);
+    const plugin = Plugins.findOneById(pluginId);
+    if (!plugin) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    if (plugin.userId !== userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(pluginData, {
+      versionName: String,
+      externalLink: Match.Optional(String),
+      platforms: [String],
+      fileHeader: Match.Optional({
+        name: String,
+        size: Number,
+        type: String,
+      }),
+      fileData: Match.Optional(String),
+    });
+
+    const versionName = pluginData.versionName.trim().substr(0, 40);
+    const externalLink = pluginData.externalLink?.trim();
+    const { fileHeader, fileData } = pluginData;
+
+    if (!pluginData.platforms.length) {
+      throw new Meteor.Error('invalid-data', 'missing-platform');
+    }
+
+    for (const platformCode of pluginData.platforms) {
+      const platform = Platforms.findOneById(platformCode);
+      if (!platform) {
+        throw new Meteor.Error('invalid-data', 'unknown-platform', platformCode);
+      }
+    }
+
+    if (!externalLink && !fileData) {
+      throw new Meteor.Error('invalid-data', 'missing-file');
+    }
+
+    let fileId;
+
+    if (fileData) {
+      const maxFileSize = 1024 * 1024;
+      const allowedTypes = [
+        'application/x-7z-compressed',
+        'application/zip',
+        'application/x-rar-compressed',
+        'text/javascript'
+      ];
+
+      if (!fileHeader) {
+        throw new Meteor.Error('invalid-data');
+      }
+      if (fileHeader.size > maxFileSize) {
+        throw new Meteor.Error('invalid-data');
+      }
+      if (!allowedTypes.includes(fileHeader.type)) {
+        throw new Meteor.Error('invalid-data');
+      }
+      if (fileData.length > maxFileSize * 1.1) {
+        throw new Meteor.Error('invalid-data');
+      }
+
+      fileId = Files.insertFile(fileHeader.name, fileHeader.size, fileHeader.type, fileData);
+    }
+
+    const pluginVersion = {
+      _id: Random.id(),
+      name: versionName,
+      externalLink,
+      fileId,
+      platforms: pluginData.platforms,
+      _createdAt: new Date(),
+      _updatedAt: new Date(),
+    };
+
+    Plugins.addVersion(pluginId, pluginVersion);
+  },
+
   'plugin/edit'(pluginData: ModifiedPlugin) {
     const userId = Meteor.userId();
     if (!userId) {
@@ -171,6 +258,34 @@ Meteor.methods({
     }
 
     Plugins.updatePlugin(pluginData);
+  },
+
+  'plugin/file/delete'(pluginId: string, fileId: string) {
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    check(pluginId, String);
+    check(fileId, String);
+
+    const plugin = Plugins.findOneById(pluginId);
+    if (!plugin) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    if (plugin.userId !== userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    for (const version of plugin.versions) {
+      if (version._id === fileId) {
+        Plugins.removeVersion(pluginId, fileId);
+        return;
+      }
+    }
+
+    throw new Meteor.Error('invalid-data');
   },
 
   'plugin/review'(reviewData: SubmittedReview) {
@@ -235,6 +350,8 @@ Meteor.methods({
         return;
       }
     }
+
+    throw new Meteor.Error('invalid-data');
   },
 
   'plugin/click'(pluginId: string) {
