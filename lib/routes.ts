@@ -150,6 +150,10 @@ FlowRouter.route('/mv/master-list', {
   async action() {
     await import('../client/templates/masterList/masterListLite');
 
+    if (lastTemplate === 'masterListLite' && Session.get('masterListPlatform') !== 'mv') {
+      BlazeLayout.reset();
+    }
+
     Session.set('masterListPlatform', 'mv');
     useTemplate('masterListLite', 'MV Plugins Master List');
   }
@@ -158,6 +162,10 @@ FlowRouter.route('/mv/master-list', {
 FlowRouter.route('/mz/master-list', {
   async action() {
     await import('../client/templates/masterList/masterListLite');
+
+    if (lastTemplate === 'masterListLite' && Session.get('masterListPlatform') !== 'mz') {
+      BlazeLayout.reset();
+    }
 
     Session.set('masterListPlatform', 'mz');
     useTemplate('masterListLite', 'MZ Plugins Master List');
