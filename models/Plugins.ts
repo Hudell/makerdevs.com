@@ -32,11 +32,13 @@ class PluginsModel extends Base {
         _id: 1,
         name: 1,
         description: 1,
+        public: 1,
       },
     };
 
     const query = {
       'versions.platforms': platformCode,
+      public: true,
     };
 
     return this.find(query, options);
@@ -168,7 +170,31 @@ class PluginsModel extends Base {
       fields: {
         name: 1,
         description: 1,
+        public: 1,
       }
+    };
+
+    return this.find(query, options);
+  }
+
+  public findAllByUser(userId: string, includeDrafts: boolean) {
+    const query: Record<string, any> = {
+      userId,
+    };
+
+    if (!includeDrafts) {
+      query.public = true;
+    }
+
+    const options = {
+      fields: {
+        name: 1,
+        description: 1,
+        public: 1,
+      },
+      sort: {
+        _updatedAt: -1,
+      },
     };
 
     return this.find(query, options);

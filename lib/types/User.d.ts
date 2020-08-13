@@ -12,3 +12,9 @@ export type User = MongoDocument & {
   about?: string;
   importedId?: string;
 };
+
+export type UpdateUserData = MongoDocument & {
+  name: string;
+  website?: string;
+  about?: string;
+};

@@ -1,3 +1,54 @@
 <template name="profile">
-  User Profile
+  {{#if isValid}}
+    {{#if isLoaded}}
+      <div class="card card-success">
+        <div class="card-body">
+          <h3 class="">{{user.name}}</h3>
+
+          <p class="mt-2">
+            {{#markdown}}{{user.about}}{{/markdown}}
+          </p>
+
+          {{#if currentUser}}
+            <p></p>
+            <div class="">
+              <a class="btn btn-outline-primary {{#if liked}}btn-info{{/if}} like-btn">
+                <i class="fa fa-thumbs-up"></i> Like{{#if liked}}d{{/if}}
+              </a>
+              {{#if canReview}}
+                <a class="btn btn-outline-primary review-btn">
+                  <i class="fa fa-comment"></i> Review
+                </a>
+              {{/if}}
+              {{#if canEdit}}
+                <a class="btn btn-outline-primary edit-btn">
+                  <i class="fa fa-edit"></i> Edit
+                </a>
+              {{/if}}
+            </div>
+          {{/if}}
+
+          {{#if likeCount}}
+            <p class="text-muted mt-2">
+              {{#if singleLike}}
+              Liked by <span class="red">1</span> user.
+              {{else}}
+              Liked by <span class="red">{{likeCount}}</span> users.
+              {{/if}}
+            </p>
+          {{/if}}
+        </div>
+      </div>
+
+      <div class="row">
+        {{#each user.plugins}}
+          {{> pluginCard}}
+        {{/each}}
+      </div>
+    {{else}}
+      <div class="overlay text-center">
+        <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+      </div>
+    {{/if}}
+  {{/if}}
 </template>

@@ -103,7 +103,7 @@ Template.editPlugin.events({
     Meteor.call('plugin/edit', pluginData, (err, result) => {
       if (err) {
         console.log(err);
-        toastr.error("Failed to save the data, review the data and try again.");
+        toastr.error("Failed to save the plugin, review the data and try again.");
         return;
       }
 

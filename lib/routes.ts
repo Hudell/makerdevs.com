@@ -3,9 +3,19 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { Session } from 'meteor/session';
 import toastr from 'toastr';
 
+let lastTemplate: String = '';
+const templatesToReset = [
+  'profile',
+];
+
 const useTemplate = (templateName: string, pageTitle: string, breadcrumbs: Array<String> = []) => {
   Session.set('pageTitle', pageTitle);
   Session.set('breadcrumbs', breadcrumbs);
+  if (templateName === lastTemplate && templatesToReset.includes(templateName)) {
+    BlazeLayout.reset();
+  }
+
+  lastTemplate = templateName;
   return BlazeLayout.render('contentWrapper', {
     main: templateName,
   });
@@ -96,6 +106,7 @@ FlowRouter.route('/me', {
       return;
     }
 
+    Session.set('profileUserId', Meteor.userId());
     await import('../client/templates/profile/profile');
     useTemplate('profile', 'My Profile');
   }
@@ -119,10 +130,19 @@ FlowRouter.route('/latest', {
 });
 
 FlowRouter.route('/profile/:userId', {
-  async action() {
+  async action(params: { userId: string }) {
     await import('../client/templates/profile/profile');
 
+    Session.set('profileUserId', params.userId);
     useTemplate('profile', 'User Profile');
+  }
+});
+
+FlowRouter.route('/user/edit/:userId', {
+  async action(params: { userId: string }) {
+    await import('../client/templates/profile/editProfile');
+
+    useTemplate('editProfile', 'Edit Profile');
   }
 });
 

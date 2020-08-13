@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 
-import { User } from '../lib/types/User';
+import { User, UpdateUserData } from '../lib/types/User';
 import { Base } from './Base';
 
 class Users extends Base {
@@ -39,6 +39,50 @@ class Users extends Base {
     };
 
     return this.find(query).count();
+  }
+
+  public like(uid: string, userId: string): void {
+    const query = {
+      _id: uid,
+    };
+
+    const data = {
+      $addToSet: {
+        'reactions.like': userId,
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public dislike(uid: string, userId: string): void {
+    const query = {
+      _id: uid,
+    };
+
+    const data = {
+      $pull: {
+        'reactions.like': userId,
+      },
+    };
+
+    this.update(query, data);
+  }
+
+  public updateProfile(uid: string, data: UpdateUserData): void {
+    const query = {
+      _id: uid,
+    };
+
+    const updateData = {
+      $set: {
+        name: data.name,
+        website: data.website,
+        about: data.about,
+      },
+    };
+
+    this.update(query, updateData);
   }
 }
 
