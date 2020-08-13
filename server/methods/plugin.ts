@@ -248,6 +248,11 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
+    const plugin = Plugins.findOneById(pluginId);
+    if (!plugin) {
+      throw new Meteor.Error('plugin-not-found');
+    }
+
     if (Plugins.userLikedPlugin(userId, pluginId)) {
       Plugins.dislike(pluginId, userId);
     } else {

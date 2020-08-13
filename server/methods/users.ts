@@ -1,11 +1,11 @@
 import { Meteor } from 'meteor/meteor';
-import { Email } from 'meteor/email';
 import { check } from 'meteor/check';
 
 import PHPPassword from 'node-php-password';
 
 import Users from '../../models/Users';
-import { NO_REPLY_EMAIL } from '../constants';
+import Plugins from '../../models/Plugins';
+import { UpdateUserData } from '../../lib/types/User';
 
 Meteor.methods({
   'user/register'(name, email, password) {
@@ -56,10 +56,72 @@ Meteor.methods({
 
     Accounts.setPassword(user._id as string, password);
   },
-  'users/sendFakePasswordRecovery'(to) {
-    const html = `
-      <p>You sent a password recovery at makerdevs, however you don't own an account.</p>
-    `;
-    Email.send({ to, html, from: NO_REPLY_EMAIL });
+  'user/details'(userId: string) {
+    check(userId, String);
+
+    const user = Users.findOneById(userId);
+    if (!user) {
+      throw new Meteor.Error('user-not-found');
+    }
+
+    const sameUser = userId === Meteor.userId();
+
+    if (user) {
+      user.plugins = [];
+
+      const plugins = Plugins.findAllByUser(userId, sameUser);
+      if (plugins) {
+        plugins.forEach((plugin) => {
+          user.plugins.push(plugin);
+        });
+      }
+    }
+
+    return user;
+  },
+  'user/like'(uid: string) {
+    check(uid, String);
+
+    const userId = Meteor.userId();
+    if (!userId) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    const user = Users.findOneById(uid);
+    if (!user) {
+      throw new Meteor.Error('user-not-found');
+    }
+
+    if (user.reactions?.like?.includes(userId)) {
+      Users.dislike(uid, userId);
+    } else {
+      Users.like(uid, userId);
+    }
+  },
+  'user/edit'(userData: UpdateUserData) {
+    check(userData, {
+      _id: String,
+      name: String,
+      website: String,
+      about: String,
+    });
+
+    const userId = Meteor.userId();
+    if (!userId || userId !== userData._id) {
+      throw new Meteor.Error('not-authorized');
+    }
+
+    if (!userData.name || userData.name.length > 60) {
+      throw new Meteor.Error('invalid-data');
+    }
+    if (userData.website && userData.website.length > 255) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    Users.updateProfile(userData._id, {
+      name: userData.name,
+      website: userData.website,
+      about: userData.about,
+    });
   }
 });

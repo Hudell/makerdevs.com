@@ -1,0 +1,64 @@
+<template name="editProfile">
+  {{#if isLoaded}}
+  <div class="row">
+    <div class="col-md-6">
+      <form role="form">
+        <div class="card card-primary">
+          <div class="card-header">
+            <h3 class="card-title">General Information</h3>
+          </div>
+          <div class="card-body">
+            <div class="form-group">
+              <label for="userName">Name</label>
+              <input type="text" class="form-control" id="userName" maxlength="60" value="{{user.name}}">
+            </div>
+            <div class="form-group">
+              <label for="userWebsite">Website</label>
+              <input type="text" class="form-control" id="userWebsite" maxlength="255" value="{{user.website}}">
+            </div>
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary submit">Submit</button>
+              <button type="button" class="btn btn-secondary cancel">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col-md-6">
+      <div class="card card-warning">
+        <div class="card-header">
+          <h3 class="card-title">About You</h3>
+        </div>
+        <div class="card-body">
+          <form role="form">
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label>About You</label>
+                  <textarea class="form-control" rows="10" id="userAbout">{{user.about}}</textarea>
+
+                  <p class="text-muted">You can use <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" rel="noreferrer noopener" target="_blank">Markdown</a> to format your profile.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label>Preview</label>
+                  {{#markdown}}{{aboutPreview}}{{/markdown}}
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}
+</template>

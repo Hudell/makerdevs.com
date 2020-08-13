@@ -34,7 +34,7 @@ const refreshData = (instance) => {
 
     Session.set('pageTitle', `Plugin Details - ${ data.name }`);
     instance.plugin.set(data);
-  });  
+  });
 };
 
 const getLatestFiles = () => {
@@ -106,9 +106,6 @@ Template.pluginPage.helpers({
   },
   liked() {
     return checkReaction('like');
-  },
-  disliked() {
-    return checkReaction('dislike');
   },
   canReview() {
     const userId = Meteor.userId();
