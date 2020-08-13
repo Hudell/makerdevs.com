@@ -1,0 +1,12 @@
+<template name="admin">
+  <aside class="control-sidebar control-sidebar-dark">
+    {{#if currentUser.admin}}
+      <a href="/admin/services" class="btn btn-primary btn-block mb-2 mt-2">
+        <p>Login Services</p>
+      </a>
+      <a href="/admin/import" class="btn btn-primary btn-block mb-2 mt-2">
+        <p>Import Data</p>
+      </a>
+    {{/if}}
+  </aside>
+</template>
