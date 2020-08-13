@@ -129,7 +129,6 @@ FlowRouter.route('/profile/:userId', {
 FlowRouter.route('/mv/master-list', {
   async action() {
     await import('../client/templates/masterList/masterListLite');
-    Meteor.SubsCache.subscribe('mv:masterlist');
 
     Session.set('masterListPlatform', 'mv');
     useTemplate('masterListLite', 'MV Plugins Master List');
@@ -139,7 +138,6 @@ FlowRouter.route('/mv/master-list', {
 FlowRouter.route('/mz/master-list', {
   async action() {
     await import('../client/templates/masterList/masterListLite');
-    Meteor.SubsCache.subscribe('mz:masterlist');
 
     Session.set('masterListPlatform', 'mz');
     useTemplate('masterListLite', 'MZ Plugins Master List');

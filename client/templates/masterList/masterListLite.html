@@ -1,10 +1,28 @@
 <template name="masterListLite">
   {{#if isReady}}
+
+    <div class="card">
+      <div class="card-body">
+        {{#each symbol in headers}}
+          <a href='#{{symbol.symbol}}' class="btn btn-default">
+            <span class="badge bg-success">{{symbol.count}}</span>
+            {{symbol.symbol}}
+          </a>
+        {{/each}}
+      </div>
+    </div>
+
     {{#each symbol in headers}}
-      <h2>{{symbol}}</h2>
+      <h2>
+        <a name="{{symbol.symbol}}">{{symbol.symbol}}</a>
+        <span style="float:right">
+          <a href="#top" class="btn btn-default btn-sm"><i class="fas fa-arrow-up"> Back to top</i></a>
+        </span>
+      </h2>
+
 
       <ul>
-      {{#each plugin in symbolPlugins symbol}}
+      {{#each plugin in symbolPlugins symbol.symbol}}
         {{> pluginLiteCard plugin=plugin}}
       {{/each}}
       </ul>
