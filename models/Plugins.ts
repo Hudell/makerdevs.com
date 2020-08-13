@@ -171,7 +171,7 @@ class PluginsModel extends Base {
         name: 1,
         description: 1,
         public: 1,
-        platforms: 1
+        'versions.platforms': 1
       }
     };
 
@@ -192,7 +192,7 @@ class PluginsModel extends Base {
         name: 1,
         description: 1,
         public: 1,
-        platforms: 1
+        'versions.platforms': 1
       },
       sort: {
         _updatedAt: -1,

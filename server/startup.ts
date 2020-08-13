@@ -1,4 +1,3 @@
-import Platforms from '../models/Platforms';
 import { refreshLoginServices } from './functions/refreshLoginServices';
 import { Accounts } from 'meteor/accounts-base';
 
@@ -11,10 +10,6 @@ Meteor.startup(() => {
 
   Accounts.emailTemplates.siteName = 'MakerDevs.com';
   Accounts.emailTemplates.from = process.env['NO_REPLY_EMAIL'] || 'No reply @ Makerdevs <no-reply@makerdevs.com>';
-
-  // Create the default platforms
-  Platforms.ensurePlatform('mv', 'RPG Maker MV');
-  Platforms.ensurePlatform('mz', 'RPG Maker MZ');
 
   // Sync all login services:
   refreshLoginServices();
