@@ -1,8 +1,13 @@
 <template name="pluginCard">
   <div class="col-lg-6">
     <div class="card card-primary card-outline">
-      <div class="card-header">
-        <h5 class="m-0">{{displayName}}</h5>
+      <div class="card-header flex-row v-align">
+        <h5 class="m-0 flex-grow">{{displayName}}</h5>
+        <div class="plugin-card-icons">
+          {{#each icon in icons}}
+            <img class="plugin-card-icon" title="{{icon.name}}" alt="{{icon.name}}" src="{{icon.src}}" />
+          {{/each}}
+        </div>
       </div>
       <div class="card-body">
         <p class="card-text">{{description}}</p>
