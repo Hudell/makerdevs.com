@@ -254,6 +254,17 @@ Meteor.methods({
       Plugins.like(pluginId, userId);
     }
   },
+
+  'plugin/list'(platformCode: string) {
+    check(platformCode, String);
+
+    const platform = Platforms.findOneById(platformCode);
+    if (!platform) {
+      throw new Meteor.Error('invalid-platform');
+    }
+
+    return Plugins.findPlatformMasterlist(platformCode).fetch();
+  }
 });
 
 DDPRateLimiter.addRule({

@@ -1,3 +1,4 @@
+import toastr from 'toastr';
 import { Session } from 'meteor/session';
 
 import MvMasterList from '../../../models/client/MvMasterList';
@@ -7,49 +8,74 @@ import './masterListLite.html';
 import '../plugin/pluginLiteCard';
 
 const getPlatform = () => {
-  return Session.get('masterListPlatform') || 'mv';
+  return Session.get('masterListPlatform') || 'mz';
 };
 
-const getModel = () => {
-  const platform = getPlatform();
-
-  if (platform === 'mv') {
-    return MvMasterList;
-  }
-
-  return MzMasterList;
-}
-
-const getAllPlugins = (symbol = '') => {
-  const model = getModel();
-
-  return model.findAllBySymbol(symbol);
-};
-
-const possibleHeaders = ['#', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
 Template.masterListLite.helpers({
   headers() {
-    const model = getModel();
-    const headers = [];
-
-    for (const symbol of possibleHeaders) {
-      if (model.hasAnyPluginWithSymbol(symbol)) {
-        headers.push(symbol);
-      }
-    }
-
-    return headers;
+    return Template.instance().headers.get();
   },
 
   symbolPlugins(symbol) {
-    return getAllPlugins(symbol);
+    const plugins = Template.instance().plugins.get();
+    const rgx = new RegExp(symbol === '#' ? '^[^a-zA-Z]' : `^${ symbol }`, 'i');
+
+    return plugins.filter(plugin => plugin.name.match(rgx));
   },
 
   plugins() {
-    return getAllPlugins();
+    return Template.instance().plugins.get();
   },
 
   isReady() {
-    return Meteor.SubsCache.ready();
+    return Template.instance().isLoaded.get();
   },
+});
+
+Template.masterListLite.onCreated(function() {
+  this.isLoaded = new ReactiveVar(false);
+  this.plugins = new ReactiveVar([]);
+  this.headers = new ReactiveVar([]);
+
+  const platformCode = getPlatform();
+
+  Meteor.call('plugin/list', platformCode, (err, result) => {
+    if (err) {
+      console.log(err);
+      toastr.error("Failed to load plugin list.");
+      return;
+    }
+
+    const headers = [];
+
+    if (result) {
+      const rgx = /^[^a-zA-Z]/i;
+
+      const headerCounts = {};
+      for (const plugin of result) {
+        let symbol;
+        if (plugin.name.match(rgx)) {
+          symbol = '#';
+        } else {
+          symbol = plugin.name[0].toUpperCase();
+        }
+
+        if (!headerCounts[symbol]) {
+          headerCounts[symbol] = 0;
+        }
+        headerCounts[symbol]++;
+      }
+
+      for (const symbol in headerCounts) {
+        headers.push({
+          symbol,
+          count: headerCounts[symbol],
+        });
+      }
+    }
+
+    this.headers.set(headers);
+    this.plugins.set(result);
+    this.isLoaded.set(true);
+  });
 });
