@@ -8,6 +8,10 @@ Meteor.startup(() => {
   Accounts.urls.resetPassword = function(token) {
     return Meteor.absoluteUrl('reset-password/' + token);
   };
+
+  Accounts.emailTemplates.siteName = 'MakerDevs.com';
+  Accounts.emailTemplates.from = process.env['NO_REPLY_EMAIL'] || 'No reply @ Makerdevs <no-reply@makerdevs.com>';
+
   // Create the default platforms
   Platforms.ensurePlatform('mv', 'RPG Maker MV');
   Platforms.ensurePlatform('mz', 'RPG Maker MZ');
