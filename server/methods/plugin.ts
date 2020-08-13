@@ -2,10 +2,10 @@ import { Meteor } from 'meteor/meteor';
 import { Match, check } from 'meteor/check';
 
 import Plugins from '../../models/Plugins';
-import Platforms from '../../models/Platforms';
 import Users from '../../models/Users';
 import Files from '../../models/Files';
 import Clicks from '../../models/Clicks';
+import { Platforms } from '../../data/Platforms';
 import { UploadedPlugin, Plugin, ModifiedPlugin, SubmittedReview } from '../../lib/types/Plugin';
 
 Meteor.methods({
@@ -34,7 +34,7 @@ Meteor.methods({
         }
       }
 
-      plugin.platforms = platforms.map(code => Platforms.findOneById(code));
+      plugin.platforms = platforms.map(code => Platforms[code]);
 
       for (const review of plugin.reviews) {
         if (!review) continue;
@@ -184,8 +184,7 @@ Meteor.methods({
     }
 
     for (const platformCode of pluginData.platforms) {
-      const platform = Platforms.findOneById(platformCode);
-      if (!platform) {
+      if (!(Platforms[platformCode])) {
         throw new Meteor.Error('invalid-data', 'unknown-platform', platformCode);
       }
     }
@@ -380,8 +379,7 @@ Meteor.methods({
   'plugin/list'(platformCode: string) {
     check(platformCode, String);
 
-    const platform = Platforms.findOneById(platformCode);
-    if (!platform) {
+    if (!Platforms[platformCode]) {
       throw new Meteor.Error('invalid-platform');
     }
 

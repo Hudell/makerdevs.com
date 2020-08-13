@@ -11,7 +11,7 @@
             <ul class="list-unstyled">
               {{#each platformCode in file.platforms}}
                 <li>
-                  <a href="/platform/{{platformCode}}" class="btn-link text-secondary"><i class="fas fa-fw fa-link"></i> {{platformName platformCode}}</a>
+                  <a href="/platform/{{platformCode}}" class="btn-link text-secondary"><img class="plugin-card-icon" title="{{platformName platformCode}}" alt="{{platformCode}}" src="{{platformIcon platformCode}}" />  {{platformName platformCode}}</a>
                 </li>
               {{/each}}
             </ul>
