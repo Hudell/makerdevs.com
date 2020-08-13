@@ -1,0 +1,11 @@
+{
+  "galaxy.meteor.com": {
+    "env": {
+      "MONGO_URL": "mongodb+srv://<user>:<password>@<cluster>/<dbname>?retryWrites=true&w=majority",
+      "ROOT_URL": "https://www.makerdevs.com",
+      "MAIL_URL":"smtp://<user>:<pass>@<server>:<port>"
+    }
+  },
+  "public": {},
+  "private": {}
+}

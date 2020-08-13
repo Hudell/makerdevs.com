@@ -17,3 +17,4 @@ import './publications/services';
 import './methods/plugin';
 import './methods/users';
 import './methods/services';
+import './methods/data';
