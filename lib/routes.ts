@@ -236,8 +236,8 @@ FlowRouter.route('/admin/import', {
       return;
     }
 
-    await import('../client/templates/admin/loginServices');
-    useTemplate('loginServices', 'Login Services');
+    await import('../client/templates/admin/import');
+    useTemplate('import', 'Import');
   }
 });
 

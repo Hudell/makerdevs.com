@@ -6,11 +6,6 @@ Accounts.onCreateUser((options, user) => {
     user.emails = user.services.github.emails;
   }
 
-  // If there's no admin in the collection yet, set this user as admin
-  if (Users.countAdmins() === 0) {
-    user.admin = true;
-  }
-
   return user;
 });
 
