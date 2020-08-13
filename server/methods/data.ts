@@ -7,6 +7,7 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    import('../importOldData');
+    throw new Meteor.Error('no-data-to-import');
+    // import('../importOldData');
   },
 });
