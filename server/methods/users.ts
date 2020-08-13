@@ -1,6 +1,4 @@
 import { Meteor } from 'meteor/meteor';
-import { Blaze } from "meteor/blaze";
-import { Template } from 'meteor/templating';
 import { Email } from 'meteor/email';
 import { check } from 'meteor/check';
 
@@ -8,8 +6,6 @@ import PHPPassword from 'node-php-password';
 
 import Users from '../../models/Users';
 import { NO_REPLY_EMAIL } from '../constants';
-
-import passwordRecovery from "../mailing/passwordRecovery";
 
 Meteor.methods({
   'user/register'(name, email, password) {

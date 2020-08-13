@@ -1,5 +1,5 @@
 <template name="masterListLite">
-
+  {{#if isReady}}
     {{#each symbol in headers}}
       <h2>{{symbol}}</h2>
 
@@ -10,5 +10,10 @@
       </ul>
 
     {{/each}}
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}
 
 </template>
