@@ -19,10 +19,19 @@ Template.resetPassword.events({
     input.prop('disabled', true);
     Accounts.forgotPassword({ email }, (error) => {
       input.prop('disabled', false);
+
       if (error) {
-        Meteor.call('users/sendFakePasswordRecovery', email);
+        if (error.reason == "User not found") {
+          toastr.error(`No user with email ${ email } was found.`);
+          return;
+        }
+
+        console.log(error);
+        toastr.error("Failed to send recovery email.");
+        return;
       }
-      toastr.info(`An email was sent to ${email}, please check your inbox.`);
+
+      toastr.success(`An email was sent to ${email}, please check your inbox.`);
     })
   }
 });
