@@ -13,3 +13,19 @@
   -ms-flex-pack: center;
   justify-content: center;
 }
+
+.flex-row {
+  display: flex;
+}
+
+.flex-row.v-align {
+  align-items: center;
+}
+
+.flex-grow {
+  flex: 1;
+}
+
+.plugin-card-icon {
+  max-width: 24px;
+}
