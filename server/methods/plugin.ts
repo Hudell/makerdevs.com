@@ -8,7 +8,10 @@ import Clicks from '../../models/Clicks';
 import { Platforms } from '../../data/Platforms';
 import { UploadedPlugin, Plugin, ModifiedPlugin, SubmittedReview } from '../../lib/types/Plugin';
 
-import DOMPurify from 'dompurify';
+import createDOMPurify from 'dompurify';
+import { JSDOM } from "jsdom";
+
+const DOMPurify = createDOMPurify(new JSDOM('').window as any);
 
 Meteor.methods({
   'plugin/details'(pluginId) {
