@@ -9,7 +9,6 @@ import '../models/Files';
 import '../models/Clicks';
 import '../models/Services';
 
-import './publications/plugins';
 import './publications/users';
 import './publications/services';
 

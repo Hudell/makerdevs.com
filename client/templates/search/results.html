@@ -1,15 +1,20 @@
 <template name="searchResults">
+  {{#if isLoaded}}
+    {{#if singleResult}}
+      <h4>1 Result</h4>
+    {{else}}
+      <h4>{{resultCount}} results</h4>
+    {{/if}}
 
-  {{#if singleResult}}
-    <h4>1 Result</h4>
+    <ul>
+    {{#each plugin in plugins}}
+      {{> pluginLiteCard plugin=plugin}}
+    {{/each}}
+    </ul>
   {{else}}
-    <h4>{{resultCount}} results</h4>
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
   {{/if}}
-
-  <ul>
-  {{#each plugin in plugins}}
-    {{> pluginLiteCard plugin=plugin}}
-  {{/each}}
-  </ul>
 
 </template>

@@ -6,18 +6,46 @@ import Plugins from '../../../models/Plugins';
 
 Template.searchResults.helpers({
   plugins() {
-    return Plugins.findAll({
-      sort: {
-        score: -1,
-      },
-    });
+    return Template.instance().plugins.get();
+  },
+  isLoaded() {
+    return Template.instance().isLoaded.get();
   },
 
   resultCount() {
-    return Plugins.findAll().count();
+    const plugins = Template.instance().plugins.get();
+    if (!plugins) {
+      return 0;
+    }
+
+    return plugins.length;
   },
 
   singleResult() {
-    return Plugins.findAll().count() === 1;
+    const plugins = Template.instance().plugins.get();
+    if (!plugins) {
+      return 0;
+    }
+
+    return plugins.length === 1;
   },
+});
+
+Template.searchResults.onCreated(function(){
+  this.plugins = new ReactiveVar(false);
+  this.isLoaded = new ReactiveVar(false);
+
+  const query = FlowRouter.getParam('query');
+
+  Meteor.call('plugin/search', query, (err, result) => {
+    if (err) {
+      console.log(err);
+      toastr.error("Failed to load plugins.");
+      return;
+    }
+
+    this.isLoaded.set(true);
+    this.plugins.set(result);
+  });
+
 });

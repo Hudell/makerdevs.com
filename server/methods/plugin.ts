@@ -56,6 +56,23 @@ Meteor.methods({
     return plugin;
   },
 
+  'plugin/latest'() {
+    return Plugins.findLatest(20).fetch();
+  },
+
+  'plugin/search'(query: string) {
+    check(query, Match.Maybe(String));
+
+    if (query) {
+      const filter = query.trim();
+      if (filter) {
+        return Plugins.searchPlugins(filter).fetch();
+      }
+    }
+
+    return Plugins.findAll().fetch();
+  },
+
   'plugin/submit'(pluginData: UploadedPlugin) {
     const userId = Meteor.userId();
     if (!userId) {

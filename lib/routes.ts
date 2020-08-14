@@ -24,7 +24,6 @@ const useTemplate = (templateName: string, pageTitle: string, breadcrumbs: Array
 FlowRouter.route('/', {
   async action() {
     await import('../client/templates/latestPlugins/latestPlugins');
-    Meteor.SubsCache.subscribe('latestPlugins');
 
     useTemplate('latestPlugins', 'Latest Plugins');
   }
@@ -92,7 +91,6 @@ FlowRouter.route('/logout', {
 FlowRouter.route('/home', {
   async action() {
     await import('../client/templates/latestPlugins/latestPlugins');
-    Meteor.SubsCache.subscribe('latestPlugins');
 
     useTemplate('latestPlugins', 'Latest Plugins');
   }
@@ -123,7 +121,6 @@ FlowRouter.route('/about', {
 FlowRouter.route('/latest', {
   async action() {
     await import('../client/templates/latestPlugins/latestPlugins');
-    Meteor.SubsCache.subscribe('latestPlugins');
 
     useTemplate('latestPlugins', 'Latest Plugins');
   }
@@ -221,16 +218,10 @@ FlowRouter.route('/plugin/review/:pluginId', {
 });
 
 
-let oldSub: any;
 FlowRouter.route('/search/:query', {
   async action(params: { query: string | undefined }) {
     await import('../client/templates/search/results');
 
-    if (oldSub) {
-      oldSub.stopNow();
-    }
-
-    oldSub = Meteor.SubsCache.subscribe('plugins', params.query);
     useTemplate('searchResults', `Searching for "${ params.query }"`);
   }
 });
