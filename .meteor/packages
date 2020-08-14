@@ -26,7 +26,6 @@ ccorcos:subs-cache
 kadira:flow-router
 kadira:blaze-layout
 zimme:active-route
-markdown
 ddp-rate-limiter
 random
 underscore
