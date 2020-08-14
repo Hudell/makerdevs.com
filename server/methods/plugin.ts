@@ -8,6 +8,8 @@ import Clicks from '../../models/Clicks';
 import { Platforms } from '../../data/Platforms';
 import { UploadedPlugin, Plugin, ModifiedPlugin, SubmittedReview } from '../../lib/types/Plugin';
 
+import DOMPurify from 'dompurify';
+
 Meteor.methods({
   'plugin/details'(pluginId) {
     check(pluginId, String);
@@ -110,7 +112,10 @@ Meteor.methods({
     const description = pluginData.description?.trim().substr(0, 100);
     const versionName = pluginData.versionName.trim().substr(0, 40);
     const externalLink = pluginData.externalLink?.trim();
-    const help = pluginData.help?.trim();
+    let help = pluginData.help?.trim();
+    if (help) {
+      help = DOMPurify.sanitize(help);
+    }
     const { fileHeader, fileData } = pluginData;
 
     if (!pluginData.platforms.length) {
@@ -292,6 +297,10 @@ Meteor.methods({
 
     if (plugin.userId !== userId) {
       throw new Meteor.Error('not-authorized');
+    }
+
+    if (pluginData.help) {
+      pluginData.help = DOMPurify.sanitize(pluginData.help);
     }
 
     Plugins.updatePlugin(pluginData);
