@@ -29,6 +29,10 @@ Meteor.methods({
         plugin.authorSlug = plugin.userId;
       }
 
+      if (!plugin.public && plugin.userId !== Meteor.userId()) {
+        throw new Meteor.Error('not-authorized', 'private', plugin.authorSlug);
+      }
+
       const platforms: Array<string> = [];
       for (const version of plugin.versions) {
         if (!version) continue;
