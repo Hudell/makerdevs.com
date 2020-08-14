@@ -71,6 +71,17 @@ const refreshData = (instance) => {
     instance.isLoaded.set(true);
 
     if (err) {
+      if (err.error === 'not-authorized' && err.reason === 'private') {
+        toastr.error("This plugin is only visible to it's author.");
+        const userSlug = err.details;
+        if (userSlug) {
+          FlowRouter.go(`/profile/${ userSlug }`);
+          return;
+        }
+
+        FlowRouter.go(`/home`);
+      }
+
       toastr.error("Failed to load plugin data.");
       console.log(err);
       return;
