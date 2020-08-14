@@ -10,7 +10,8 @@ import "highlight.js/styles/github.css";
 marked.setOptions({
   gfm: true,
   highlight(code, lang) {
-    return `<div class="hljs language-${lang}">${code}</div>`;
+    return `<div class="hljs language-${lang || 'js'}">${code}</div>`;
+
   },
   sanitizer(code) {
     return DOMPurify.sanitize(code);
