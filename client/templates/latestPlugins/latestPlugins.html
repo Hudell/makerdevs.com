@@ -1,9 +1,15 @@
 <template name="latestPlugins">
-  <div class="container-fluid">
-    <div class="row">
-      {{#each plugins}}
-        {{> pluginCard}}
-      {{/each}}
+  {{#if isLoaded}}
+    <div class="container-fluid">
+      <div class="row">
+        {{#each plugins}}
+          {{> pluginCard}}
+        {{/each}}
+      </div>
     </div>
-  </div>
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}
 </template>
