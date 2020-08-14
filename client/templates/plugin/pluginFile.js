@@ -52,7 +52,6 @@ Template.pluginFile.events({
 
         toastr.success("Version deleted successfully.");
         document.location.reload(false);
-        // FlowRouter.go(`/plugin/${ pluginId }`);
       });
     });
   }

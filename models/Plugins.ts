@@ -7,6 +7,16 @@ class PluginsModel extends Base {
     super('plugins');
     this.ensureIndex('userId');
     this.ensureIndex('public');
+
+    this._db.friendlySlugs({
+      slugFrom: 'name',
+      slugField: 'slug',
+      distinct: true,
+      updateSlug: false,
+      createOnUpdate: true,
+    });
+
+    this.updateSlugs();
   }
 
   public findOneByImportedId(importedId: string): Plugin | undefined {
@@ -33,6 +43,7 @@ class PluginsModel extends Base {
         name: 1,
         description: 1,
         public: 1,
+        slug: 1,
       },
     };
 
@@ -171,7 +182,8 @@ class PluginsModel extends Base {
         name: 1,
         description: 1,
         public: 1,
-        'versions.platforms': 1
+        'versions.platforms': 1,
+        slug: 1,
       }
     };
 
@@ -192,7 +204,8 @@ class PluginsModel extends Base {
         name: 1,
         description: 1,
         public: 1,
-        'versions.platforms': 1
+        'versions.platforms': 1,
+        slug: 1,
       },
       sort: {
         _updatedAt: -1,

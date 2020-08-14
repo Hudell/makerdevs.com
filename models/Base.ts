@@ -81,6 +81,17 @@ export class Base {
     return this.findOne({ _id }, {});
   }
 
+  public findOneByIdOrSlug(_id: string): MongoDocument | undefined {
+    const query = {
+      $or: [{
+        _id,
+      }, {
+        slug: _id,
+      }],
+    };
+    return this.findOne(query, {});
+  }
+
   public findAll({limit = 0, sort}: { limit?: number; sort?: Record<string, number>} = {}): Mongo.Cursor<MongoDocument> {
     const options = {
       ...limit && { limit },
@@ -98,4 +109,17 @@ export class Base {
       },
     });
   }
+
+  protected updateSlugs() {
+    const items = this.find({
+      slug: {
+        $exists: false,
+      },
+    });
+
+    items.forEach((item) => {
+      this.update({_id: item._id}, {$set: { _updatedAt: new Date() }});
+    });
+  }
+
 }
