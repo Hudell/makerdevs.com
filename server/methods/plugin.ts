@@ -60,6 +60,17 @@ Meteor.methods({
     return Plugins.findLatest(10).fetch();
   },
 
+  'plugin/import'(importedId) {
+    check(importedId, String);
+
+    const plugin = Plugins.findOneByImportedId(importedId);
+    if (!plugin) {
+      throw new Meteor.Error('invalid-data');
+    }
+
+    return plugin.slug;
+  },
+
   'plugin/search'(query: string) {
     check(query, Match.Maybe(String));
 
