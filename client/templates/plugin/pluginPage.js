@@ -72,7 +72,7 @@ const refreshData = (instance) => {
 
     if (err) {
       if (err.error === 'not-authorized' && err.reason === 'private') {
-        toastr.error("This plugin is only visible to it's author.");
+        toastr.error("This plugin is only visible to its author.");
         const userSlug = err.details;
         if (userSlug) {
           FlowRouter.go(`/profile/${ userSlug }`);
