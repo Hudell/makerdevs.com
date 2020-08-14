@@ -117,7 +117,7 @@ Meteor.methods({
     const externalLink = pluginData.externalLink?.trim();
     let help = pluginData.help?.trim();
     if (help) {
-      help = DOMPurify.sanitize(help);
+      help = DOMPurify.sanitize(help, { ALLOWED_TAGS: [] })
     }
     const { fileHeader, fileData } = pluginData;
 
