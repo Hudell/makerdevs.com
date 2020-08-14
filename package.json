@@ -13,8 +13,11 @@
     "@types/meteor": "^1.4.48",
     "@types/mocha": "^5.2.7",
     "bcrypt": "^5.0.0",
+    "dompurify": "^2.0.12",
     "gravatar": "^1.8.1",
+    "highlight.js": "^10.1.2",
     "jquery": "^3.4.1",
+    "marked": "^1.1.1",
     "meteor-node-stubs": "^1.0.0",
     "meteor-sha256": "^1.0.1",
     "node-php-password": "^0.1.2",
@@ -22,6 +25,7 @@
     "toastr": "^2.1.4"
   },
   "devDependencies": {
+    "@types/marked": "^1.1.0",
     "chai": "^4.2.0",
     "typescript": "^3.8.2"
   },

@@ -1,4 +1,5 @@
 import './startup';
+import './helpers/markdown';
 import '../lib/routes';
 
 import './layout/body';
