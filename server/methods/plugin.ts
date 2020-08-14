@@ -57,7 +57,7 @@ Meteor.methods({
   },
 
   'plugin/latest'() {
-    return Plugins.findLatest(20).fetch();
+    return Plugins.findLatest(10).fetch();
   },
 
   'plugin/search'(query: string) {
