@@ -17,6 +17,7 @@
     "gravatar": "^1.8.1",
     "highlight.js": "^10.1.2",
     "jquery": "^3.4.1",
+    "jsdom": "^16.4.0",
     "marked": "^1.1.1",
     "meteor-node-stubs": "^1.0.0",
     "meteor-sha256": "^1.0.1",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@types/dompurify": "^2.0.3",
+    "@types/jsdom": "^16.2.3",
     "@types/marked": "^1.1.0",
     "chai": "^4.2.0",
     "typescript": "^3.8.2"
