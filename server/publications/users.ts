@@ -4,6 +4,7 @@ const fields = {
   admin: 1,
   website: 1,
   _createdAt: 1,
+  slug: 1,
 };
 
 Meteor.publish("userData", function () {

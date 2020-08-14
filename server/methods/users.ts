@@ -59,17 +59,17 @@ Meteor.methods({
   'user/details'(userId: string) {
     check(userId, String);
 
-    const user = Users.findOneById(userId);
+    const user = Users.findOneByIdOrSlug(userId);
     if (!user) {
       throw new Meteor.Error('user-not-found');
     }
 
-    const sameUser = userId === Meteor.userId();
+    const sameUser = user._id === Meteor.userId();
 
     if (user) {
       user.plugins = [];
 
-      const plugins = Plugins.findAllByUser(userId, sameUser);
+      const plugins = Plugins.findAllByUser(user._id as string, sameUser);
       if (plugins) {
         plugins.forEach((plugin) => {
           user.plugins.push(plugin);
@@ -87,15 +87,15 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    const user = Users.findOneById(uid);
+    const user = Users.findOneByIdOrSlug(uid);
     if (!user) {
       throw new Meteor.Error('user-not-found');
     }
 
     if (user.reactions?.like?.includes(userId)) {
-      Users.dislike(uid, userId);
+      Users.dislike(user._id as string, userId);
     } else {
-      Users.like(uid, userId);
+      Users.like(user._id as string, userId);
     }
   },
   'user/edit'(userData: UpdateUserData) {

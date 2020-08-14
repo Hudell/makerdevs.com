@@ -6,6 +6,16 @@ import { Base } from './Base';
 class Users extends Base {
   constructor() {
     super('users', Meteor.users as any);
+
+    this._db.friendlySlugs({
+      slugFrom: 'name',
+      slugField: 'slug',
+      distinct: true,
+      updateSlug: false,
+      createOnUpdate: true,
+    });
+
+    this.updateSlugs();
   }
 
   public addUser(record: User): string {

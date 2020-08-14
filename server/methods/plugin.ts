@@ -12,14 +12,16 @@ Meteor.methods({
   'plugin/details'(pluginId) {
     check(pluginId, String);
 
-    const plugin = Plugins.findOneById(pluginId);
+    const plugin = Plugins.findOneByIdOrSlug(pluginId);
 
     if (plugin) {
       const user = Users.findOneById(plugin.userId);
-      if (user && user.name) {
+      if (user) {
         plugin.author = user.name;
+        plugin.authorSlug = user.slug;
       } else {
-        plugin.author = 'Unnamed User';
+        plugin.author = 'Unknown User';
+        plugin.authorSlug = plugin.userId;
       }
 
       const platforms: Array<string> = [];
@@ -42,9 +44,11 @@ Meteor.methods({
         const reviewUser = Users.findOneById(review.userId);
         if (reviewUser && reviewUser.name) {
           review.author = reviewUser.name;
+          review.authorSlug = reviewUser.slug;
           review.authorEmail = reviewUser.emails[0].address;
         } else {
-          review.author = 'Unnamed User';
+          review.author = 'Unknown User';
+          review.authorSlug = review.userId;
         }
       }
     }
@@ -86,7 +90,7 @@ Meteor.methods({
     }
 
     for (const platformCode of pluginData.platforms) {
-      const platform = Platforms.findOneById(platformCode);
+      const platform = Platforms[platformCode];
       if (!platform) {
         throw new Meteor.Error('invalid-data', 'unknown-platform', platformCode);
       }
@@ -144,7 +148,13 @@ Meteor.methods({
       platforms: pluginData.platforms,
     });
 
-    return Plugins.addPlugin(newPluginData);
+    const pluginId = Plugins.addPlugin(newPluginData);
+    if (!pluginId) {
+      return pluginId;
+    }
+
+    const savedPluginData = Plugins.findOneById(pluginId);
+    return savedPluginData?.slug;
   },
 
   'plugin/submitFile'(pluginId, pluginData) {
@@ -154,7 +164,7 @@ Meteor.methods({
     }
 
     check(pluginId, String);
-    const plugin = Plugins.findOneById(pluginId);
+    const plugin = Plugins.findOneByIdOrSlug(pluginId);
     if (!plugin) {
       throw new Meteor.Error('invalid-data');
     }
@@ -230,7 +240,7 @@ Meteor.methods({
       _updatedAt: new Date(),
     };
 
-    Plugins.addVersion(pluginId, pluginVersion);
+    Plugins.addVersion(plugin._id as string, pluginVersion);
   },
 
   'plugin/edit'(pluginData: ModifiedPlugin) {
@@ -268,7 +278,7 @@ Meteor.methods({
     check(pluginId, String);
     check(fileId, String);
 
-    const plugin = Plugins.findOneById(pluginId);
+    const plugin = Plugins.findOneByIdOrSlug(pluginId);
     if (!plugin) {
       throw new Meteor.Error('invalid-data');
     }
@@ -279,7 +289,7 @@ Meteor.methods({
 
     for (const version of plugin.versions) {
       if (version._id === fileId) {
-        Plugins.removeVersion(pluginId, fileId);
+        Plugins.removeVersion(plugin._id as string, fileId);
         return;
       }
     }
@@ -334,7 +344,7 @@ Meteor.methods({
 
     check(pluginId, String);
 
-    const plugin = Plugins.findOneById(pluginId);
+    const plugin = Plugins.findOneByIdOrSlug(pluginId);
     if (!plugin) {
       throw new Meteor.Error('invalid-data');
     }
@@ -345,7 +355,7 @@ Meteor.methods({
 
     for (const review of plugin.reviews) {
       if (review.userId === userId) {
-        Plugins.removeUserReview(userId, pluginId);
+        Plugins.removeUserReview(userId, plugin._id as string);
         return;
       }
     }
@@ -355,7 +365,11 @@ Meteor.methods({
 
   'plugin/click'(pluginId: string) {
     const address = this.connection?.clientAddress;
-    Clicks.insertClick(pluginId, Meteor.userId(), address);
+
+    const plugin = Plugins.findOneByIdOrSlug(pluginId);
+    if (plugin) {
+      Clicks.insertClick(plugin._id as string, Meteor.userId(), address);
+    }
   },
 
   'plugin/like'(pluginId: string) {
@@ -364,15 +378,15 @@ Meteor.methods({
       throw new Meteor.Error('not-authorized');
     }
 
-    const plugin = Plugins.findOneById(pluginId);
+    const plugin = Plugins.findOneByIdOrSlug(pluginId);
     if (!plugin) {
       throw new Meteor.Error('plugin-not-found');
     }
 
-    if (Plugins.userLikedPlugin(userId, pluginId)) {
-      Plugins.dislike(pluginId, userId);
+    if (Plugins.userLikedPlugin(userId, plugin._id as string)) {
+      Plugins.dislike(plugin._id as string, userId);
     } else {
-      Plugins.like(pluginId, userId);
+      Plugins.like(plugin._id as string, userId);
     }
   },
 

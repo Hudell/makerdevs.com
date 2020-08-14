@@ -67,7 +67,8 @@ Template.editPlugin.events({
   'click .submit'(e, instance) {
     e.preventDefault();
 
-    const pluginId = FlowRouter.getParam('pluginId');
+    const oldPlugin = getPlugin();
+    const pluginId = oldPlugin._id;
     const name = $('#pluginName').val();
     const description = $('#pluginDescription').val();
 
@@ -108,7 +109,7 @@ Template.editPlugin.events({
       }
 
       toastr.success("Plugin updated successfully.");
-      FlowRouter.go(`/plugin/${ pluginId }`);
+      FlowRouter.go(`/plugin/${ oldPlugin.slug }`);
     });
   },
 });

@@ -29,7 +29,7 @@ const refreshData = (instance) => {
 
     if (data._id !== Meteor.userId()) {
       toastr.error("You can't edit someone else's profile.");
-      FlowRouter.go(`/profile/${ userId }`);
+      FlowRouter.go(`/profile/${ data.slug || data._id }`);
       return;
     }
 
@@ -64,7 +64,8 @@ Template.editProfile.events({
   'click .submit'(e, instance) {
     e.preventDefault();
 
-    const userId = FlowRouter.getParam('userId');
+    const user = getUser();
+    const userId = user._id;
     const name = $('#userName').val();
     const website = $('#userWebsite').val();
 
@@ -103,7 +104,7 @@ Template.editProfile.events({
       }
 
       toastr.success("Profile updated successfully.");
-      FlowRouter.go(`/profile/${ userId }`);
+      FlowRouter.go(`/profile/${ user.slug || user._id }`);
     });
   },
 });

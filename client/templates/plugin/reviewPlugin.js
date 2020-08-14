@@ -33,7 +33,7 @@ const refreshData = (instance) => {
         rating: 0,
       });
     }
-  });  
+  });
 };
 
 Template.reviewPlugin.helpers({
@@ -106,7 +106,8 @@ Template.reviewPlugin.events({
   'click .submit'(e, instance) {
     e.preventDefault();
 
-    const pluginId = FlowRouter.getParam('pluginId');
+    const plugin = getPlugin();
+    const pluginId = plugin._id;
     const comment = $('#pluginReview').val().trim();
     const rating = instance.review.get().rating;
 
@@ -139,7 +140,7 @@ Template.reviewPlugin.events({
       }
 
       toastr.success("Review sent successfully.");
-      FlowRouter.go(`/plugin/${ pluginId }`);
+      FlowRouter.go(`/plugin/${ plugin.slug }`);
     });
   },
 });
