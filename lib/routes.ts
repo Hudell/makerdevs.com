@@ -233,9 +233,23 @@ FlowRouter.route('/search', {
 });
 
 FlowRouter.route('/mvplugin/:importedId', {
-  async action() {
-    await import('../client/templates/plugin/pluginPage');
-    useTemplate('pluginPage', 'Plugin');
+  async action(params: { importedId : string }) {
+    Meteor.call('plugin/import', params.importedId, (err, result) => {
+      if (err) {
+        console.log(params, err);
+        const name = FlowRouter.getQueryParam('name');
+        if (name) {
+          FlowRouter.go(`/search/${ name }`);
+          return;
+        }
+
+        toastr.error("Failed to identify what plugin redirected you to this site.");
+        FlowRouter.go(`/home`);
+      }
+
+      FlowRouter.go(`/plugin/${ result }`);
+      return;
+    });
   }
 });
 
