@@ -2,9 +2,18 @@ import './editPlugin.html';
 import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
 import { Session } from 'meteor/session';
+import createDOMPurify from 'dompurify';
+
+const DOMPurify = createDOMPurify(window);
+const sanitize = (text) => {
+  if (text) {
+    return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+  }
+  return text;
+}
 
 const updateHelp = _.debounce((instance) => {
-  const help = $('#pluginHelp').val();
+  const help = sanitize($('#pluginHelp').val());
 
   instance.helpPreview.set(help);
 }, 300);
@@ -34,7 +43,7 @@ const refreshData = (instance) => {
 
     Session.set('pageTitle', `Edit Details - ${ data.name }`);
     instance.plugin.set(data);
-    instance.helpPreview.set(data.help);
+    instance.helpPreview.set(sanitize(data.help));
   });
 };
 

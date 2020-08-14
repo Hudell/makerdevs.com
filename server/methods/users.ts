@@ -7,6 +7,11 @@ import Users from '../../models/Users';
 import Plugins from '../../models/Plugins';
 import { UpdateUserData } from '../../lib/types/User';
 
+import createDOMPurify from 'dompurify';
+import { JSDOM } from "jsdom";
+
+const DOMPurify = createDOMPurify(new JSDOM('').window as any);
+
 Meteor.methods({
   'user/register'(name, email, password) {
     check(name, String);
@@ -118,10 +123,15 @@ Meteor.methods({
       throw new Meteor.Error('invalid-data');
     }
 
+    let about = userData.about;
+    if (about) {
+      about = DOMPurify.sanitize(about, { ALLOWED_TAGS: [] })
+    }
+
     Users.updateProfile(userData._id, {
       name: userData.name,
       website: userData.website,
-      about: userData.about,
+      about: about,
     });
   }
 });

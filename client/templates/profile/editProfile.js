@@ -3,13 +3,21 @@ import './editProfile.html';
 import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
 import { Session } from 'meteor/session';
+import createDOMPurify from 'dompurify';
+
+const DOMPurify = createDOMPurify(window);
+
+const sanitize = (text) => {
+  if (text) {
+    return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+  }
+  return text;
+}
 
 const updateAbout = _.debounce((instance) => {
-  const about = $('#userAbout').val();
-
+  const about = sanitize($('#userAbout').val());
   instance.aboutPreview.set(about);
 }, 300);
-
 
 const getUser = () => {
   return Template.instance().user.get();
@@ -35,7 +43,7 @@ const refreshData = (instance) => {
 
     Session.set('pageTitle', `Edit Profile - ${ data.name }`);
     instance.user.set(data);
-    instance.aboutPreview.set(data.about);
+    instance.aboutPreview.set(sanitize(data.about));
   });
 };
 
