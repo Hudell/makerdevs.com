@@ -7,6 +7,7 @@ import Files from '../../models/Files';
 import Clicks from '../../models/Clicks';
 import { Platforms } from '../../data/Platforms';
 import { UploadedPlugin, Plugin, ModifiedPlugin, SubmittedReview } from '../../lib/types/Plugin';
+import { allowedTypes } from '../../lib/fileTypes';
 
 import createDOMPurify from 'dompurify';
 import { JSDOM } from "jsdom";
@@ -144,12 +145,6 @@ Meteor.methods({
 
     if (fileData) {
       const maxFileSize = 1024 * 1024;
-      const allowedTypes = [
-        'application/x-7z-compressed',
-        'application/zip',
-        'application/x-rar-compressed',
-        'text/javascript'
-      ];
 
       if (!fileHeader) {
         throw new Meteor.Error('invalid-data');
