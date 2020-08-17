@@ -28,6 +28,10 @@ Template.registerHelper("date", function (date: Date) {
 });
 
 Template.registerHelper("dateTime", function (date: Date) {
+  if (!date) {
+    return '';
+  }
+
   return `${ date.toLocaleDateString()} ${ date.toLocaleTimeString() }`;
 });
 

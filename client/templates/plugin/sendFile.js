@@ -1,7 +1,8 @@
-import './sendFile.html';
-
 import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
+
+import { allowedTypes } from '../../../lib/fileTypes';
+import './sendFile.html';
 
 Template.sendFile.helpers({
   fileHeader() {
@@ -28,7 +29,6 @@ Template.sendFile.events({
       return;
     }
 
-    const allowedTypes = ['application/x-7z-compressed', 'application/zip', 'application/x-rar-compressed', 'text/javascript'];
     if (!allowedTypes.includes(type)) {
       toastr.error('Invalid file type');
       return;

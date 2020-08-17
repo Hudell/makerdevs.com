@@ -102,7 +102,9 @@ export class Base {
   }
 
   public findLatest(limit: number): Mongo.Cursor<MongoDocument> {
-    return this.findAll({
+    return this.find({
+      public: true,
+    },{
       limit,
       sort: {
         _createdAt: -1,

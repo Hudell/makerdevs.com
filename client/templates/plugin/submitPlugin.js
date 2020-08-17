@@ -1,9 +1,20 @@
-import './submitPlugin.html';
 import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
 
+import { allowedTypes } from '../../../lib/fileTypes';
+import createDOMPurify from 'dompurify';
+import './submitPlugin.html';
+
+const DOMPurify = createDOMPurify(window);
+const sanitize = (text) => {
+  if (text) {
+    return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+  }
+  return text;
+}
+
 const updateHelp = _.debounce((instance) => {
-  const help = $('#pluginHelp').val();
+  const help = sanitize($('#pluginHelp').val());
 
   instance.helpPreview.set(help);
 }, 300);
@@ -36,7 +47,6 @@ Template.submitPlugin.events({
       return;
     }
 
-    const allowedTypes = ['application/x-7z-compressed', 'application/zip', 'application/x-rar-compressed', 'text/javascript'];
     if (!allowedTypes.includes(type)) {
       toastr.error('Invalid file type');
       return;
