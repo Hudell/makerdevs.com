@@ -6,6 +6,9 @@ Template.pluginCard.helpers({
     const name = this.name;
     return name;
   },
+  draft() {
+    return !this.public;
+  },
   icons() {
     const platforms = [];
 
