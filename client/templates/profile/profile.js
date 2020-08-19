@@ -74,6 +74,10 @@ Template.profile.helpers({
   isValid() {
     return !Template.instance().isInvalid.get();
   },
+  userAvatarUrl() {
+    const user = getUser();
+    return gravatar.url(user.emails[0].address, {}, true);
+  },
   avatarUrl(email) {
     return gravatar.url(email, {}, true);
   },
@@ -113,6 +117,10 @@ Template.profile.events({
   'click .edit-btn'(e, instance) {
     const userId = getUserId();
     FlowRouter.go(`/user/edit/${ userId }`);
+  },
+  'click .change-password-btn'(e, instance) {
+    const userId = getUserId();
+    FlowRouter.go(`/user/password/${ userId }`);
   },
 });
 
