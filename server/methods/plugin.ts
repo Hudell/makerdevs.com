@@ -181,6 +181,8 @@ Meteor.methods({
       externalLink,
       fileId,
       platforms: pluginData.platforms,
+      _createdAt: new Date(),
+      _updatedAt: new Date(),
     });
 
     const pluginId = Plugins.addPlugin(newPluginData);
