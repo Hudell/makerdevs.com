@@ -15,6 +15,14 @@
         <p class="card-text">{{description}}</p>
 
         <a href="/plugin/{{slug}}" class="btn btn-primary">View Plugin</a>
+
+        {{#if draft}}
+          <div class="ribbon-wrapper ribbon-lg">
+            <div class="ribbon bg-warning text-lg">
+              DRAFT
+            </div>
+          </div>
+        {{/if}}
       </div>
     </div>
   </div>
