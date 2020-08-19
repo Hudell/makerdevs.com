@@ -3,11 +3,13 @@
     {{#if isLoaded}}
       <div class="card card-success">
         <div class="card-body">
-          <h3 class="">{{user.name}}</h3>
 
-          <p class="mt-2">
-            {{#markdown}}{{user.about}}{{/markdown}}
-          </p>
+          <h3 class="">
+            <img src="{{userAvatarUrl}}" class="user-image img-circle elevation-2" alt="User Image">
+            <span class="ml-4">
+            {{user.name}}
+            </span>
+          </h3>
 
           {{#if currentUser}}
             <p></p>
@@ -24,6 +26,9 @@
                 <a class="btn btn-outline-primary edit-btn">
                   <i class="fa fa-edit"></i> Edit
                 </a>
+                <a class="btn btn-outline-primary change-password-btn">
+                  <i class="fa fa-key"></i> Change Password
+                </a>
               {{/if}}
             </div>
           {{/if}}
@@ -37,6 +42,12 @@
               {{/if}}
             </p>
           {{/if}}
+
+          <hr/>
+
+          <p class="mt-2">
+            {{#markdown}}{{user.about}}{{/markdown}}
+          </p>
         </div>
       </div>
 

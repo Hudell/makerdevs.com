@@ -143,6 +143,14 @@ FlowRouter.route('/user/edit/:userId', {
   }
 });
 
+FlowRouter.route('/user/password/:userId', {
+  async action(params: { userId: string }) {
+    await import('../client/templates/profile/changePassword');
+
+    useTemplate('changePassword', 'Change Password');
+  }
+});
+
 FlowRouter.route('/mv/master-list', {
   async action() {
     await import('../client/templates/masterList/masterListLite');
