@@ -112,6 +112,9 @@ Template.pluginPage.helpers({
   plugin() {
     return getPlugin();
   },
+  draft() {
+    return !getPlugin().public;
+  },
   isLoaded() {
     return Template.instance().isLoaded.get();
   },

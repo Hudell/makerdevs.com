@@ -2,16 +2,17 @@
   {{#if isValid}}
     {{#if isLoaded}}
 
-      <div class="card card-danger card-outline">
-        <div class="card-body">
-          <div class="row">
-            <h3>
-              This plugin is set as "Draft" - only you can see it.
-            </h3>
+      {{#if draft}}
+        <div class="card card-danger card-outline">
+          <div class="card-body">
+            <div class="row">
+              <h3>
+                This plugin is set as "Draft" - only you can see it.
+              </h3>
+            </div>
           </div>
         </div>
-      </div>
-
+      {{/if}}
 
       <div class="card card-success">
         <div class="card-body">
