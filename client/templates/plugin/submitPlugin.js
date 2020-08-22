@@ -1,7 +1,7 @@
 import { _ } from 'meteor/underscore';
 import toastr from 'toastr';
 
-import { allowedTypes } from '../../../lib/fileTypes';
+import { validateFile } from '../../../lib/fileTypes';
 import createDOMPurify from 'dompurify';
 import './submitPlugin.html';
 
@@ -40,15 +40,11 @@ Template.submitPlugin.events({
       return;
     }
 
-    const { type, size, name } = file;
-
-    if (size > 1024 * 1024) {
-      toastr.error("The maximum file size is 1MB.");
-      return;
-    }
-
-    if (!allowedTypes.includes(type)) {
-      toastr.error('Invalid file type');
+    try {
+      validateFile(file);
+    } catch(e) {
+      toastr.error(e.message);
+      $('#pluginFile').val('');
       return;
     }
 

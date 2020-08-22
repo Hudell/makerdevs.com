@@ -7,7 +7,7 @@ import Files from '../../models/Files';
 import Clicks from '../../models/Clicks';
 import { Platforms } from '../../data/Platforms';
 import { UploadedPlugin, Plugin, ModifiedPlugin, SubmittedReview } from '../../lib/types/Plugin';
-import { allowedTypes } from '../../lib/fileTypes';
+import { validateFile } from '../../lib/fileTypes';
 
 import createDOMPurify from 'dompurify';
 import { JSDOM } from "jsdom";
@@ -144,19 +144,14 @@ Meteor.methods({
     let fileId;
 
     if (fileData) {
-      const maxFileSize = 1024 * 1024;
-
       if (!fileHeader) {
         throw new Meteor.Error('invalid-data');
       }
-      if (fileHeader.size > maxFileSize) {
-        throw new Meteor.Error('invalid-data');
-      }
-      if (!allowedTypes.includes(fileHeader.type)) {
-        throw new Meteor.Error('invalid-data');
-      }
-      if (fileData.length > maxFileSize * 1.1) {
-        throw new Meteor.Error('invalid-data');
+
+      try {
+        validateFile(fileHeader)
+      } catch(e) {
+        throw new Meteor.Error(e.message);
       }
 
       fileId = Files.insertFile(fileHeader.name, fileHeader.size, fileHeader.type, fileData);
@@ -241,27 +236,15 @@ Meteor.methods({
     }
 
     let fileId;
-
     if (fileData) {
-      const maxFileSize = 1024 * 1024;
-      const allowedTypes = [
-        'application/x-7z-compressed',
-        'application/zip',
-        'application/x-rar-compressed',
-        'text/javascript'
-      ];
-
       if (!fileHeader) {
         throw new Meteor.Error('invalid-data');
       }
-      if (fileHeader.size > maxFileSize) {
-        throw new Meteor.Error('invalid-data');
-      }
-      if (!allowedTypes.includes(fileHeader.type)) {
-        throw new Meteor.Error('invalid-data');
-      }
-      if (fileData.length > maxFileSize * 1.1) {
-        throw new Meteor.Error('invalid-data');
+
+      try {
+        validateFile(fileHeader)
+      } catch(e) {
+        throw new Meteor.Error(e.message);
       }
 
       fileId = Files.insertFile(fileHeader.name, fileHeader.size, fileHeader.type, fileData);
