@@ -94,6 +94,21 @@ class Users extends Base {
 
     this.update(query, updateData);
   }
+
+  public findAllInList(idList): Mongo.Cursor<User> {
+    return this.find({
+      _id: {
+        $in: idList,
+      },
+    }, {
+      fields: {
+        name: 1,
+        website: 1,
+        slug: 1,
+        'emails.address': 1,
+      },
+    });
+  }
 }
 
 export default new Users();
