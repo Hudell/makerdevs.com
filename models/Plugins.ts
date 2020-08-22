@@ -206,6 +206,7 @@ class PluginsModel extends Base {
         public: 1,
         'versions.platforms': 1,
         slug: 1,
+        _createdAt: 1,
       },
       sort: {
         _updatedAt: -1,

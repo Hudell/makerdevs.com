@@ -4,7 +4,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Session } from 'meteor/session';
 
 import toastr from 'toastr';
-import gravatar from 'gravatar';
 
 import Plugins from '../../../models/Plugins';
 import { Modal } from '../../utils/modal';
@@ -73,13 +72,6 @@ Template.profile.helpers({
   },
   isValid() {
     return !Template.instance().isInvalid.get();
-  },
-  userAvatarUrl() {
-    const user = getUser();
-    return gravatar.url(user.emails[0].address, {}, true);
-  },
-  avatarUrl(email) {
-    return gravatar.url(email, {}, true);
   },
   liked() {
     return checkReaction('like');

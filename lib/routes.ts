@@ -177,6 +177,13 @@ FlowRouter.route('/mz/master-list', {
   }
 });
 
+FlowRouter.route('/plugin/creators', {
+  async action() {
+    await import('../client/templates/plugin/pluginCreators');
+    useTemplate('pluginCreators', 'Plugin Creators');
+  }
+});
+
 FlowRouter.route('/plugin/submit', {
   async action() {
     if (!Meteor.userId()) {
