@@ -1,0 +1,42 @@
+<template name="creatorCard">
+  <div class="col-lg-6">
+    <div class="card card-primary card-outline">
+      <div class="card-header flex-row v-align">
+        <h5 class="m-0 flex-grow">{{name}}</h5>
+        <div class="plugin-card-icons">
+          {{#each icon in icons}}
+            <a href="/{{icon.code}}/master-list">
+              <img class="plugin-card-icon" title="{{icon.name}}" alt="{{icon.name}}" src="{{icon.src}}" />
+            </a>
+          {{/each}}
+        </div>
+      </div>
+
+      <div class="card-body">
+        <div class="col-12">
+          <div class="info-box" style="padding: 0; box-shadow: none">
+            <span class="info-box-icon">
+              <img src="{{avatar}}" class="user-image img-circle elevation-2" alt="User Image">
+            </span>
+
+            <div class="info-box-content ml-4">
+              <span class="info-box-number mb-2">Plugins: {{pluginCount}}</span>
+              <span class="info-box-text mb-3">
+                {{#if website}}
+                  <a href="{{website}}" rel="noreferrer noopener" target="_blank">{{website}}</a>
+                {{else}}
+                  No website
+                {{/if}}
+              </span>
+
+              <span class="info-box-text">
+                <a href="/profile/{{slug}}" class="btn btn-primary">View Profile</a>
+              </span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</template>

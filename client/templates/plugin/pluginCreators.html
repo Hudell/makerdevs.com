@@ -1,0 +1,15 @@
+<template name="pluginCreators">
+  {{#if isLoaded}}
+    <div class="container-fluid">
+      <div class="row">
+        {{#each creators}}
+          {{> creatorCard}}
+        {{/each}}
+      </div>
+    </div>
+  {{else}}
+    <div class="overlay text-center">
+      <i class="fas fa-2x fa-sync-alt fa-spin"></i>
+    </div>
+  {{/if}}
+</template>

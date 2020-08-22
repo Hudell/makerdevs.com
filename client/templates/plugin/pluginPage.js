@@ -4,7 +4,6 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Session } from 'meteor/session';
 
 import toastr from 'toastr';
-import gravatar from 'gravatar';
 
 import Plugins from '../../../models/Plugins';
 import { Modal } from '../../utils/modal';
@@ -139,9 +138,6 @@ Template.pluginPage.helpers({
     const plugin = getPlugin();
 
     return plugin.reviews?.sort((item1, item2) => item2._createdAt - item1._createdAt);
-  },
-  avatarUrl(email) {
-    return gravatar.url(email, {}, true);
   },
   liked() {
     return checkReaction('like');

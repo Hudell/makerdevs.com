@@ -11,6 +11,7 @@ import { validateFile } from '../../lib/fileTypes';
 
 import createDOMPurify from 'dompurify';
 import { JSDOM } from "jsdom";
+import gravatar from 'gravatar';
 
 const DOMPurify = createDOMPurify(new JSDOM('').window as any);
 
@@ -55,7 +56,7 @@ Meteor.methods({
         if (reviewUser && reviewUser.name) {
           review.author = reviewUser.name;
           review.authorSlug = reviewUser.slug;
-          review.authorEmail = reviewUser.emails[0].address;
+          review.authorAvatar = gravatar.url(reviewUser.emails[0].address);
         } else {
           review.author = 'Unknown User';
           review.authorSlug = review.userId;
@@ -422,6 +423,67 @@ Meteor.methods({
     }
 
     return Plugins.findPlatformMasterlist(platformCode).fetch();
+  },
+
+  'plugin/creators'() {
+    const users = Users.findAll();
+    const creators = [];
+
+    users.forEach(user => {
+      const plugins = Plugins.findAllByUser(user._id, false);
+      let pluginCount = plugins.count();
+
+      if (pluginCount === 0) {
+        return;
+      }
+
+      const platforms = [];
+      let lastPluginDate = 0;
+
+      plugins.forEach(plugin => {
+        const pluginPlatforms = [];
+
+        for (const version of plugin.versions) {
+          for (const platform of version.platforms) {
+            if (!pluginPlatforms.includes(platform)) {
+              pluginPlatforms.push(platform);
+            }
+            if (!platforms.includes(platform)) {
+              platforms.push(platform);
+            }
+          }
+        }
+
+        if (pluginPlatforms.length === 0) {
+          pluginCount--;
+        } else if (pluginPlatforms.length > 1) {
+          pluginCount += pluginPlatforms.length - 1;
+        }
+
+        if (plugin._createdAt > lastPluginDate) {
+          lastPluginDate = plugin._createdAt;
+        }
+      });
+
+      const avatar = gravatar.url(user.emails[0]?.address);
+      delete user.emails;
+
+      creators.push({
+        pluginCount,
+        platforms,
+        lastPluginDate,
+        avatar,
+        ...user,
+      });
+    });
+
+    return creators.sort((creator1, creator2) => {
+      if (creator2.pluginCount === creator1.pluginCount) {
+        return creator2.lastPluginDate - creator1.lastPluginDate;
+      }
+
+      return creator2.pluginCount - creator1.pluginCount;
+    });
   }
 });
 

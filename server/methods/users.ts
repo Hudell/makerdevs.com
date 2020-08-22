@@ -9,6 +9,7 @@ import { UpdateUserData } from '../../lib/types/User';
 
 import createDOMPurify from 'dompurify';
 import { JSDOM } from "jsdom";
+import gravatar from 'gravatar';
 
 const DOMPurify = createDOMPurify(new JSDOM('').window as any);
 
@@ -81,6 +82,9 @@ Meteor.methods({
         });
       }
     }
+
+    user.avatar = gravatar.url(user.emails[0]?.address);
+    delete user.emails;
 
     return user;
   },
