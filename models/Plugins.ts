@@ -190,6 +190,22 @@ class PluginsModel extends Base {
     return this.find(query, options);
   }
 
+  public findAllPlatformsByUser(userId: string) {
+    const query: Record<string, any> = {
+      userId,
+      public: true,
+    };
+
+    const options = {
+      fields: {
+        'versions.platforms': 1,
+        _createdAt: 1,
+      },
+    };
+
+    return this.find(query, options);
+  }
+
   public findAllByUser(userId: string, includeDrafts: boolean) {
     const query: Record<string, any> = {
       userId,
@@ -245,6 +261,18 @@ class PluginsModel extends Base {
     };
 
     this.update(query, data);
+  }
+
+  public findAllCreators(): Mongo.Cursor<MongoDocument> {
+    return this.find({
+      public: true,
+    }, {
+      fields: {
+        userId: 1,
+        'versions.platforms': 1,
+        _createdAt: 1,
+      }
+    })
   }
 }
 

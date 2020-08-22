@@ -426,44 +426,58 @@ Meteor.methods({
   },
 
   'plugin/creators'() {
-    const users = Users.findAll();
+    const plugins = Plugins.findAllCreators().fetch();
+    const creatorIds = [];
+    const creatorPluginData = {};
+
+    for (const plugin of plugins) {
+      if (!creatorIds.includes(plugin.userId)) {
+        creatorIds.push(plugin.userId);
+      }
+
+      if (!creatorPluginData[plugin.userId]) {
+        creatorPluginData[plugin.userId] = {
+          count: 0,
+          latest: 0,
+          platforms: [],
+        };
+      }
+
+      if (creatorPluginData[plugin.userId].latest < plugin._createdAt) {
+        creatorPluginData[plugin.userId].latest = plugin._createdAt;
+      }
+
+      const platforms = [];
+      for (const version of plugin.versions) {
+        for (const platform of version.platforms) {
+          if (!platforms.includes(platform)) {
+            platforms.push(platform);
+
+            if (!creatorPluginData[plugin.userId].platforms.includes(platform)) {
+              creatorPluginData[plugin.userId].platforms.push(platform);
+            }
+          }
+        }
+      }
+
+      creatorPluginData[plugin.userId].count += platforms.length;
+    }
+
+    if (!creatorIds.length) {
+      return [];
+    }
+
+    const users = Users.findAllInList(creatorIds).fetch();
     const creators = [];
 
     users.forEach(user => {
-      const plugins = Plugins.findAllByUser(user._id, false);
-      let pluginCount = plugins.count();
+      const pluginCount = creatorPluginData[user._id]?.count ?? 0;
+      const lastPluginDate = creatorPluginData[user._id]?.latest ?? 0;
+      const platforms = creatorPluginData[user._id]?.platforms || [];
 
       if (pluginCount === 0) {
         return;
       }
-
-      const platforms = [];
-      let lastPluginDate = 0;
-
-      plugins.forEach(plugin => {
-        const pluginPlatforms = [];
-
-        for (const version of plugin.versions) {
-          for (const platform of version.platforms) {
-            if (!pluginPlatforms.includes(platform)) {
-              pluginPlatforms.push(platform);
-            }
-            if (!platforms.includes(platform)) {
-              platforms.push(platform);
-            }
-          }
-        }
-
-        if (pluginPlatforms.length === 0) {
-          pluginCount--;
-        } else if (pluginPlatforms.length > 1) {
-          pluginCount += pluginPlatforms.length - 1;
-        }
-
-        if (plugin._createdAt > lastPluginDate) {
-          lastPluginDate = plugin._createdAt;
-        }
-      });
 
       const avatar = gravatar.url(user.emails[0]?.address);
       delete user.emails;
