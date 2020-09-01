@@ -1,4 +1,17 @@
 <template name="submitPlugin">
+
+  {{#if noDonation}}
+    <div class="card card-info">
+      <div class="card-header">
+        You can add a Donation URL to your profile, to display
+        <a class="btn btn-outline-primary donate-btn btn-warning" target="_blank" rel="noopener noreferrer">
+          <i class="fa fa-wallet"></i> Donate to {{currentUser.name}}
+        </a>
+        on your plugin pages
+      </div>
+    </div>
+  {{/if}}
+
   <div class="row">
     <div class="col-md-6">
       <form role="form">

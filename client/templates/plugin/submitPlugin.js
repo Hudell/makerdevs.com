@@ -30,6 +30,13 @@ Template.submitPlugin.helpers({
   helpPreview() {
     return Template.instance().helpPreview.get();
   },
+  noDonation() {
+    const user = Meteor.user();
+    if (!user) {
+      return true;
+    }
+    return !user.donationUrl;
+  }
 });
 
 Template.submitPlugin.events({

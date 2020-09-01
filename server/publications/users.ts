@@ -2,6 +2,7 @@ const fields = {
   name: 1,
   admin: 1,
   website: 1,
+  donationUrl: 1,
   _createdAt: 1,
   slug: 1,
 };
