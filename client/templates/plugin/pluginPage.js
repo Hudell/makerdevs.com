@@ -190,6 +190,15 @@ Template.pluginPage.events({
       refreshData(instance);
     });
   },
+  'click .donate-btn'(e, instance) {
+    const plugin = getPlugin();
+    if (!plugin.donationUrl) {
+      toastr.info('This plugin has no donation info.');
+      return;
+    }
+
+    window.open(plugin.donationUrl);
+  },
   'click .edit-btn'(e, instance) {
     const pluginId = FlowRouter.getParam('pluginId');
     FlowRouter.go(`/plugin/edit/${ pluginId }`);

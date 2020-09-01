@@ -26,6 +26,7 @@ Meteor.methods({
       if (user) {
         plugin.author = user.name;
         plugin.authorSlug = user.slug;
+        plugin.donationUrl = user.donationUrl;
       } else {
         plugin.author = 'Unknown User';
         plugin.authorSlug = plugin.userId;

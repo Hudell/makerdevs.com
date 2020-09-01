@@ -106,6 +106,15 @@ Template.profile.events({
       refreshData(instance);
     });
   },
+  'click .donate-btn'(e, instance) {
+    const user = getUser();
+    if (!user.donationUrl) {
+      toastr.info('This user has no donation info.');
+      return;
+    }
+
+    window.open(user.donationUrl);
+  },
   'click .edit-btn'(e, instance) {
     const userId = getUserId();
     FlowRouter.go(`/user/edit/${ userId }`);

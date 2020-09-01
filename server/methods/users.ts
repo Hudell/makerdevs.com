@@ -113,6 +113,7 @@ Meteor.methods({
       name: String,
       website: String,
       about: String,
+      donationUrl: String,
     });
 
     const userId = Meteor.userId();
@@ -126,6 +127,9 @@ Meteor.methods({
     if (userData.website && userData.website.length > 255) {
       throw new Meteor.Error('invalid-data');
     }
+    if (userData.donationUrl && userData.donationUrl.length > 255) {
+      throw new Meteor.Error('invalid-data');
+    }
 
     let about = userData.about;
     if (about) {
@@ -135,6 +139,7 @@ Meteor.methods({
     Users.updateProfile(userData._id, {
       name: userData.name,
       website: userData.website,
+      donationUrl: userData.donationUrl,
       about: about,
     });
   }

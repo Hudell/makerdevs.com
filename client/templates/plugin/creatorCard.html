@@ -14,7 +14,7 @@
 
       <div class="card-body">
         <div class="col-12">
-          <div class="info-box" style="padding: 0; box-shadow: none">
+          <div class="info-box mb-0" style="padding: 0; box-shadow: none">
             <span class="info-box-icon">
               <img src="{{avatar}}" class="user-image img-circle elevation-2" alt="User Image">
             </span>
@@ -27,11 +27,20 @@
                 {{else}}
                   No website
                 {{/if}}
+
               </span>
 
-              <span class="info-box-text">
-                <a href="/profile/{{slug}}" class="btn btn-primary">View Profile</a>
-              </span>
+              <div class="info-box mb-0" style="padding: 0; box-shadow: none">
+                <span class="info-box-text">
+                  <a href="/profile/{{slug}}" class="btn btn-primary">View Profile</a>
+                </span>
+
+                {{#if donationUrl}}
+                  <span class="info-box-text pl-4">
+                    <a href="{{donationUrl}}" rel="noreferrer noopener" target="_blank" class="btn btn-warning"><i class="fa fa-wallet"></i> Donate</a>
+                  </span>
+                {{/if}}
+              </div>
             </div>
           </div>
         </div>

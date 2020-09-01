@@ -89,13 +89,14 @@ class Users extends Base {
         name: data.name,
         website: data.website,
         about: data.about,
+        donationUrl: data.donationUrl,
       },
     };
 
     this.update(query, updateData);
   }
 
-  public findAllInList(idList): Mongo.Cursor<User> {
+  public findAllInList(idList: Array<string>): Mongo.Cursor<User> {
     return this.find({
       _id: {
         $in: idList,
@@ -104,10 +105,11 @@ class Users extends Base {
       fields: {
         name: 1,
         website: 1,
+        donationUrl: 1,
         slug: 1,
         'emails.address': 1,
       },
-    });
+    }) as Mongo.Cursor<User>;
   }
 }
 
