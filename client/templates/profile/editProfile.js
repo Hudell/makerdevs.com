@@ -76,6 +76,7 @@ Template.editProfile.events({
     const userId = user._id;
     const name = $('#userName').val();
     const website = $('#userWebsite').val();
+    const donationUrl = $('#userDonationUrl').val();
 
     const about = $('#userAbout').val();
 
@@ -84,6 +85,7 @@ Template.editProfile.events({
       name,
       website,
       about,
+      donationUrl,
     };
 
     let valid = true;

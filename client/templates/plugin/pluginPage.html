@@ -30,9 +30,9 @@
             {{plugin.description}}
           </p>
 
-          {{#if currentUser}}
-            <p></p>
-            <div class="">
+          <p></p>
+          <div class="">
+            {{#if currentUser}}
               <a class="btn btn-outline-primary {{#if liked}}btn-info{{/if}} like-btn">
                 <i class="fa fa-thumbs-up"></i> Like{{#if liked}}d{{/if}}
               </a>
@@ -49,8 +49,14 @@
                   <i class="fa fa-upload"></i> New Version
                 </a>
               {{/if}}
-            </div>
-          {{/if}}
+            {{/if}}
+
+            {{#if plugin.donationUrl}}
+              <a class="btn btn-outline-primary donate-btn btn-warning" target="_blank" rel="noopener noreferrer">
+                <i class="fa fa-wallet"></i> Donate to {{plugin.author}}
+              </a>
+            {{/if}}
+          </div>
 
           {{#if likeCount}}
             <p class="text-muted mt-2">

@@ -11,12 +11,13 @@
             </span>
           </h3>
 
+          <p></p>
+          <div class="">
           {{#if currentUser}}
-            <p></p>
-            <div class="">
               <a class="btn btn-outline-primary {{#if liked}}btn-info{{/if}} like-btn">
                 <i class="fa fa-thumbs-up"></i> Like{{#if liked}}d{{/if}}
               </a>
+
               {{#if canReview}}
                 <a class="btn btn-outline-primary review-btn">
                   <i class="fa fa-comment"></i> Review
@@ -30,8 +31,15 @@
                   <i class="fa fa-key"></i> Change Password
                 </a>
               {{/if}}
-            </div>
           {{/if}}
+
+          {{#if user.donationUrl}}
+            <a class="btn btn-outline-primary btn-warning donate-btn">
+              <i class="fa fa-wallet"></i> Donate
+            </a>
+          {{/if}}
+
+          </div>
 
           {{#if likeCount}}
             <p class="text-muted mt-2">
